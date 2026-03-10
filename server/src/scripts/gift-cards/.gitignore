@@ -1,4 +1,4 @@
-# Ignore all files in this directory (CSV logs contain PII)
+# Ignore all files in this directory (gift card/recipient CSVs contain PII)
 *
 # Except this file
 !.gitignore
