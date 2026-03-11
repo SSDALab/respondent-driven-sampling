@@ -67,28 +67,43 @@ import {
 	normalizePhoneToE164,
 	interpolateTemplate,
 	fetchMessageStatus,
-	listOutboundMessages
+	listOutboundMessages,
+	TWILIO_LIST_LIMIT
 } from '@/services/twilio';
 import {
 	CsvSmsLogger,
 	UpdatedCsvSmsLogger,
 	listLogFiles
 } from '@/services/smsLogger';
+// `import type` is a TypeScript-only import — it imports only the type
+// definitions (interfaces) for compile-time type checking. These imports are
+// completely removed from the compiled JavaScript output, so they add zero
+// runtime overhead.
 import type { SmsRecord, UpdatedSmsRecord } from '@/services/smsLogger';
 
 // ===== Template Loading =====
 
+/** Shape of a YAML SMS template file (e.g. sms-templates/gift_card.yaml). */
 interface SmsTemplate {
 	name: string;
 	description: string;
+	/** Message body with {varName} placeholders for variable substitution. */
 	body: string;
 }
 
+// ESM path resolution — see smsLogger.ts for detailed explanation.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/** Directory containing YAML SMS template files. */
 const TEMPLATES_DIR = path.join(__dirname, 'sms-templates');
 
+/**
+ * Load and parse a YAML SMS template file by name.
+ * @param templateName - Template name without extension (e.g. "gift_card").
+ * @returns Parsed template with name, description, and body fields.
+ * @throws Error if the template file doesn't exist or is missing required fields.
+ */
 function loadTemplate(templateName: string): SmsTemplate {
 	const filePath = path.join(TEMPLATES_DIR, `${templateName}.yaml`);
 
@@ -117,22 +132,40 @@ function loadTemplate(templateName: string): SmsTemplate {
 
 // ===== Recipient Queries =====
 
+/** A survey respondent who provided a phone number. */
 interface Recipient {
 	phone: string;
 	surveyCode: string;
 	surveyObjectId: string;
 }
 
+/**
+ * Query the database for survey respondents who provided a phone number.
+ * Optionally filter by location.
+ *
+ * @param locationObjectId - MongoDB ObjectId string to filter by location. Optional.
+ * @returns Array of recipients with phone, surveyCode, and surveyObjectId.
+ */
 async function getRecipients(locationObjectId?: string): Promise<Recipient[]> {
+	// Mongoose query object — uses MongoDB query operators:
+	//   $exists: true  — the field must be present in the document
+	//   $ne: ''        — the field must not equal empty string
+	//   deletedAt: null — soft-delete filter (only include non-deleted surveys)
+	// Record<string, unknown> is a TypeScript type meaning "object with string
+	// keys and values of any type" — needed because we dynamically add keys below.
 	const query: Record<string, unknown> = {
 		'responses.phone': { $exists: true, $ne: '' },
 		deletedAt: null
 	};
 
 	if (locationObjectId) {
+		// Convert the string ID to a MongoDB ObjectId for the query
 		query.locationObjectId = new mongoose.Types.ObjectId(locationObjectId);
 	}
 
+	// .select() limits which fields MongoDB returns (projection):
+	//   1 means "include this field", everything else is excluded (except _id
+	//   which is always included unless explicitly set to 0).
 	const surveys = await Survey.find(query).select({
 		'responses.phone': 1,
 		surveyCode: 1,
@@ -140,6 +173,8 @@ async function getRecipients(locationObjectId?: string): Promise<Recipient[]> {
 	});
 
 	return surveys.map(s => ({
+		// `as Record<string, string>` is a type assertion — tells TypeScript to
+		// treat s.responses as a string-keyed object so we can access .phone
 		phone: (s.responses as Record<string, string>).phone,
 		surveyCode: s.surveyCode,
 		surveyObjectId: s._id.toString()
@@ -166,6 +201,14 @@ async function listRecipients(locationObjectId?: string): Promise<void> {
 	console.log('');
 }
 
+/**
+ * Send a single SMS to one phone number using either a template or raw body text.
+ * Logs the result to sms-log-single.csv.
+ *
+ * @param phone   - Phone number in any common US format (will be normalized to E.164).
+ * @param options - Must include either `templateName` or `body` (not both).
+ *                  `vars` provides template variable substitutions (e.g. { surveyCode: "ABC123" }).
+ */
 async function sendSingle(
 	phone: string,
 	options: {
@@ -220,6 +263,18 @@ async function sendSingle(
 	console.log(`  Logged to: ${logger.getLogFilePath()}`);
 }
 
+/**
+ * Send SMS to all survey respondents who provided a phone number.
+ * Supports --dry-run mode to preview messages without actually sending.
+ *
+ * Rate-limits sends to 1 message per 1.1 seconds because Twilio long-code
+ * numbers (standard 10-digit phone numbers) are limited to 1 SMS/second.
+ * Exceeding this rate causes Twilio to queue and potentially drop messages.
+ *
+ * @param options.templateName     - Name of the YAML template to use.
+ * @param options.locationObjectId - Optional MongoDB ObjectId to filter recipients by location.
+ * @param options.dryRun           - If true, preview messages without sending.
+ */
 async function sendBulk(options: {
 	templateName: string;
 	locationObjectId?: string;
@@ -352,24 +407,43 @@ async function sendBulk(options: {
 }
 
 // ===== CSV-based Sending =====
+// This section handles sending SMS from an external CSV file (e.g. exported
+// from a gift card vendor). Unlike send-bulk which queries the database,
+// send-csv reads recipients from a CSV and does NOT require a DB connection.
 
+/** Shape of a single row in the external recipient CSV file. */
 interface CsvRecipient {
 	surveyCode: string;
 	phone: string;
+	/** Dollar amount as a string (e.g. "25"). Rows with amount=0 are skipped. */
 	amount: string;
+	/** Gift card redemption code. Rows with empty codes are skipped. */
 	rewardCode: string;
 }
 
+/**
+ * Parse an external CSV file into CsvRecipient objects.
+ * Handles BOM stripping, column mapping, deduplication, and filtering.
+ *
+ * @param filePath - Absolute or relative path to the CSV file.
+ * @returns Deduplicated, filtered array of recipients.
+ */
 function parseCsvFile(filePath: string): CsvRecipient[] {
 	if (!fs.existsSync(filePath)) {
 		throw new Error(`CSV file not found: ${filePath}`);
 	}
 
 	let content = fs.readFileSync(filePath, 'utf-8');
-	// Strip UTF-8 BOM if present (common in Excel-exported CSVs)
+	// Strip UTF-8 BOM (Byte Order Mark) if present.
+	// BOM is an invisible character (U+FEFF) that Excel and some Windows tools
+	// prepend to CSV files. If not stripped, it becomes part of the first column
+	// header and breaks column-name lookups (e.g. "\uFEFFsurveyCode" !== "surveyCode").
+	// 0xFEFF is the Unicode code point for the BOM character.
 	if (content.charCodeAt(0) === 0xfeff) {
 		content = content.slice(1);
 	}
+	// Parse the CSV content. See smsLogger.ts for explanation of csv-parse options.
+	// `trim: true` strips whitespace from each field value.
 	const rawRows = parseCsv(content, {
 		columns: true,
 		skip_empty_lines: true,
@@ -378,7 +452,9 @@ function parseCsvFile(filePath: string): CsvRecipient[] {
 		cast: false
 	}) as Record<string, string>[];
 
-	// Map columns — handle the "Reward Code" header → rewardCode
+	// Map CSV column headers to our internal field names.
+	// The `??` (nullish coalescing) chains handle varying column header names
+	// across different CSV exports (e.g. "Reward Code" vs "RewardCode").
 	const mapped = rawRows.map(row => ({
 		surveyCode: row['surveyCode'] ?? '',
 		phone: row['phone'] ?? '',
@@ -399,6 +475,10 @@ function parseCsvFile(filePath: string): CsvRecipient[] {
 	return deduped.filter(r => Number(r.amount) > 0 && r.rewardCode !== '');
 }
 
+/**
+ * Format a numeric amount string into a dollar display string (e.g. "25" → "$25").
+ * @throws Error if the amount is not a valid integer.
+ */
 function formatAmount(amount: string): string {
 	const num = parseInt(amount, 10);
 	if (isNaN(num)) {
@@ -407,6 +487,16 @@ function formatAmount(amount: string): string {
 	return `$${num}`;
 }
 
+/**
+ * Send SMS to recipients listed in an external CSV file.
+ * Similar to sendBulk but reads from CSV instead of the database,
+ * and supports additional template variables (amount, rewardCode).
+ * Does NOT require a database connection.
+ *
+ * @param options.filePath     - Path to the CSV file with recipient data.
+ * @param options.templateName - Name of the YAML template to use.
+ * @param options.dryRun       - If true, preview messages without sending.
+ */
 async function sendCsv(options: {
 	filePath: string;
 	templateName: string;
@@ -559,6 +649,13 @@ function showLogs(): void {
 	console.log('');
 }
 
+/**
+ * Recover a send log by fetching all outbound messages from the Twilio API.
+ * Useful when the local CSV log was lost or incomplete. Writes a
+ * "recovered" CSV file with the fetched message data.
+ *
+ * @param options.date - Optional date filter (YYYY-MM-DD) to limit results to a single day.
+ */
 async function fetchLogs(options: { date?: string }): Promise<void> {
 	console.log('\n📥 Fetching outbound messages from Twilio API...\n');
 
@@ -577,6 +674,15 @@ async function fetchLogs(options: { date?: string }): Promise<void> {
 	if (messages.length === 0) {
 		console.log('No outbound messages found.');
 		return;
+	}
+
+	// Warn if the result count hit our configured limit — some messages may have
+	// been truncated. Increase TWILIO_LIST_LIMIT in twilio.ts if this happens.
+	if (messages.length >= TWILIO_LIST_LIMIT) {
+		console.warn(
+			`  ⚠ WARNING: Retrieved ${messages.length} messages, which equals the configured limit (${TWILIO_LIST_LIMIT}).` +
+				'\n  Some messages may have been truncated. Consider increasing TWILIO_LIST_LIMIT in twilio.ts.\n'
+		);
 	}
 
 	console.log(`  Found ${messages.length} outbound message(s).\n`);
@@ -614,6 +720,14 @@ async function fetchLogs(options: { date?: string }): Promise<void> {
 	);
 }
 
+/**
+ * Fetch the latest delivery status from Twilio for every record in one or
+ * more log files. Creates an enriched CSV per source log with columns for
+ * dateSent, price, priceUnit, errorCode, and errorMessage. The original
+ * log file is preserved — a new "-updated-DATE.csv" file is written.
+ *
+ * @param logFilename - Optional: limit the check to a single log file.
+ */
 async function checkStatus(logFilename?: string): Promise<void> {
 	console.log('\n🔄 Checking SMS delivery statuses via Twilio API...\n');
 
@@ -727,17 +841,29 @@ async function checkStatus(logFilename?: string): Promise<void> {
 }
 
 // ===== Argument Parsing Helpers =====
+// Simple hand-rolled argument parsing (no external library like yargs/commander).
+// These helpers extract named flags and key=value pairs from process.argv.
 
+/**
+ * Get the value following a named flag (e.g. "--template gift_card" → "gift_card").
+ * @returns The value string, or undefined if the flag is not present.
+ */
 function getFlag(args: string[], flag: string): string | undefined {
 	const index = args.indexOf(flag);
 	if (index === -1 || index + 1 >= args.length) return undefined;
 	return args[index + 1];
 }
 
+/** Check if a boolean flag is present (e.g. "--dry-run"). */
 function hasFlag(args: string[], flag: string): boolean {
 	return args.includes(flag);
 }
 
+/**
+ * Extract all `--var key=value` pairs from the argument list.
+ * Supports multiple --var flags (e.g. `--var surveyCode=ABC --var amount=25`).
+ * @returns Object mapping variable names to their values.
+ */
 function getVars(args: string[]): Record<string, string> {
 	const vars: Record<string, string> = {};
 	for (let i = 0; i < args.length; i++) {
@@ -757,9 +883,13 @@ function getVars(args: string[]): Record<string, string> {
 }
 
 // ===== Main =====
+// Entry point: parses CLI arguments, routes to the appropriate operation,
+// and handles database connection lifecycle.
 
 async function main(): Promise<void> {
 	try {
+		// process.argv is [node, script, ...userArgs]. slice(2) drops the first
+		// two elements to get just the user-provided arguments.
 		const args = process.argv.slice(2);
 
 		if (args.length === 0) {
@@ -846,6 +976,11 @@ async function main(): Promise<void> {
 			'\n✗ Error:',
 			error instanceof Error ? error.message : error
 		);
+		// Set process.exitCode instead of calling process.exit() directly.
+		// process.exit() terminates immediately (skipping the `finally` block
+		// and any pending I/O), while setting exitCode lets the event loop
+		// drain naturally — so the `finally` block below still runs and the
+		// database connection is properly closed.
 		process.exitCode = 1;
 	} finally {
 		if (mongoose.connection.readyState === 1) {
