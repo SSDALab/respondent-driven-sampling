@@ -738,9 +738,11 @@ async function checkStatus(logFilename?: string): Promise<void> {
 		return;
 	}
 
+	// Exclude previously enriched files (e.g. "*-updated-2026-03-01.csv") to avoid
+	// creating chains like "...-updated-...-updated-....csv" on repeated runs.
 	const filesToCheck = logFilename
 		? logFiles.filter(f => f.filename === logFilename)
-		: logFiles;
+		: logFiles.filter(f => !/-updated-\d{4}-\d{2}-\d{2}\.csv$/.test(f.filename));
 
 	if (filesToCheck.length === 0) {
 		console.log(`Log file "${logFilename}" not found.`);
