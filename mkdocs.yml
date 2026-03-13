@@ -1,0 +1,66 @@
+site_name: RDS App Documentation
+site_url: https://uw-ssec.github.io/respondent-driven-sampling/
+repo_url: https://github.com/uw-ssec/respondent-driven-sampling
+repo_name: uw-ssec/respondent-driven-sampling
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - About:
+      - RDS Methodology: about/rds-methodology.md
+      - Project Overview: about/project-overview.md
+  - Getting Started:
+      - Prerequisites: getting-started/prerequisites.md
+      - Quickstart: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - How-To:
+      - Deployment: how-to/deployment.md
+      - Experimental Setup: how-to/experimental-setup.md
+      - Onboarding Localities: how-to/onboarding-localities.md
+      - Debugging: how-to/debugging.md
+      - Database & Security: how-to/database-and-security.md
+      - Post-Survey Analysis: how-to/analysis.md
+      - CI / Workflows: how-to/ci.md
+  - Reference:
+      - Architecture: reference/architecture.md
+      - Environment Variables: reference/environment-variables.md
+      - CLI Scripts: reference/cli-scripts.md
+      - API Overview: reference/api.md
+      - Database Migration: reference/database-migration.md
+  - Contributing:
+      - How to Contribute: contributing/index.md
+      - Release Process: contributing/release-process.md
+      - Operations: contributing/operations.md

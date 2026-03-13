@@ -1,5 +1,9 @@
 # Deployment
 
+This page covers deploying the RDS App to Azure App Service — the setup used by King County. If you are going through first-time setup, complete the [Quickstart](../getting-started/quickstart.md) first.
+
+The app is a monorepo: the React frontend (`client/`) is built and its `dist/` output is copied into the `server/` folder so the Node.js backend serves both the API and the static frontend from a single service.
+
 There are two main workflows for deploying this codebase to Azure. In both cases the end result is having the codebase loaded onto an Azure Web App where it will install packages, build the client code and then run the Node.js server app (in `server/`). The two workflows of deploying the website are through GitHub Actions or manually through Azure's VSCode extension.
 
 ## GitHub Actions (Continuous Deployment)
@@ -68,7 +72,7 @@ jobs:
 ### Prepare Azure Credentials
 
 - Replace <YOUR_AZURE_WEBAPP_NAME> with the exact name of your Azure App Service.
-- In the Azure Portal, go to your App Service > "Downloan publish profile" and download it.
+- In the Azure Portal, go to your App Service > "Download publish profile" and download it.
 - In your GitHub repo, go to **Settings > Secrets and variables > Actions > New repository secret**.
 - Add a new secret named `AZURE_WEBAPP_PUBLISH_PROFILE` and paste the contents of the downloaded publish profile XML.
 

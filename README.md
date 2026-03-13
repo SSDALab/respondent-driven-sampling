@@ -1,5 +1,7 @@
 ## Overview
 
+> **Documentation:** [uw-ssec.github.io/respondent-driven-sampling](https://uw-ssec.github.io/respondent-driven-sampling/)
+
 The RDS App is a secure, accessible, and open-source web application that streamlines data collection for homelessness research using **Respondent-Driven Sampling (RDS)**. Developed in collaboration with the University of Washington iSchool and the King County Regional Homelessness Authority (KCRHA), this app enables volunteers and administrators to collect accurate survey data, track referrals, and generate population estimates more effectively than traditional Point-In-Time (PIT) counts.
 
 <!-- > **Live Deployment:** [Link to App](https://rds-main-g6e3dpefdabmcmca.westus-01.azurewebsites.net/login) -->
@@ -19,176 +21,84 @@ The RDS App is a secure, accessible, and open-source web application that stream
 | Hosting     | Azure Web Service                |
 | QR Scanning | Html5QrcodeScanner, QRCodeCanvas |
 
-## Directory (old)
+## Directory structure
 
 ```plaintext
-client/                   # Client-facing React application
-├── build/                # Production build of the React app
-├── static/               # Static assets (JS, CSS, media)
-│   ├── js/               # Compiled JS chunks
-│   │   ├── 488.db91e947.chunk.js         # Bundled JS code for part of the React app
-│   │   └── 488.db91e947.chunk.js.map     # Source map for debugging that chunk
-│   ├── asset-manifest.json               # Maps file names to generated names (used by backend)
-│   ├── favicon.ico                       # Icon shown in browser tab
-│   ├── index.html                        # Root HTML file for the React app
-│   ├── manifest.json                     # Metadata for PWA features (name, icons, theme color)
-│   └── robots.txt                        # Tells search engines what to crawl or not
-├── public/               # Files accessible to anyone on the internet
-│   ├── favicon.ico                       # Icon file for the application
-│   ├── index.html                        # The main HTML file that serves as the entry point
-│   ├── manifest.json                     # Metadata about the web application
-│   └── robots.txt                        # Instructs crawlers on access rules
-├── src/                  # Source code for the app
-│   ├── components/
-│   │   └── survey/
-│   │       └── SurveyComponent.tsx        # Survey component logic
-│   ├── pages/
-│   │   ├── AdminDashboard/               # Admin dashboard code. Shows staff
-│   │   │   ├── NewUser.tsx               # Admin new user creation
-│   │   │   └── StaffDashboard.tsx        # Admin dashboard UI
-│   │   ├── CompletedSurvey/
-│   │   │   ├── CompletedSurvey.tsx       # End of survey functionality code
-│   │   │   └── QrPage.tsx                # Displays generated QR code
-│   │   ├── Header/
-│   │   │   └── Header.tsx                # Header functionality code
-│   │   ├── LandingPage/
-│   │   │   └── LandingPage.tsx           # App landing page functionality code
-│   │   ├── Login/
-│   │   │   └── Login.tsx                 # Login functionality code
-│   │   ├── PastEntries/
-│   │   │   ├── PastEntries.tsx           # Past survey entries dashboard functionality
-│   │   │   ├── SurveyDetails.tsx         # Displays individual survey details
-│   │   ├── Profile/
-│   │   │   ├── AdminEditProfile.tsx      # Edit profile functionalities
-│   │   │   └── ViewProfile.tsx
-│   │   ├── QRCodeScanAndReferral/
-│   │   │   └── ApplyReferral.tsx         # Functionality to apply a referral code
-│   │   ├── Signup/
-│   │   │   └── Signup.tsx                # Sign up functionality
-│   │   └── SurveyEntryDashboard/
-│   │       └── SurveyEntryDashboard.tsx  # Displays all surveys as a dashboard
-│   ├── App.tsx                           # Main component of the application
-│   ├── App.test.js                       # Contains tests for the App component
-│   ├── index.tsx                         # JS entry point; renders root React component
-│   ├── index.css                         # Global styles for the application
-│   ├── logo.svg                          # The React logo
-│   ├── setupTests.js                     # Sets up the testing environment
-│   ├── assets/                           # Image assets for UI
-│   │   ├── filter.png
-│   │   ├── magnifyingGlass.png
-│   │   ├── pencil.png
-│   │   ├── trash.png
-│   │   └── up-down.png
-│   ├── styles/                           # Styling files by page/component
-│   │   ├── ApplyReferral.css
-│   │   ├── LandingPage.css
-│   │   ├── PastEntriesCss.css
-│   │   ├── StaffDashboard.css
-│   │   ├── SurveyDashboard.css
-│   │   ├── SurveyDetailsCss.css
-│   │   ├── complete.css
-│   │   ├── header.css
-│   │   ├── login.css
-│   │   ├── profile.css
-│   │   └── signup.css
-│   ├── types/                            # TypeScript type definitions
-│   │   ├── AuthProps.ts
-│   │   ├── ReferralCode.ts
-│   │   ├── Survey.ts
-│   │   └── User.ts
-│   └── vite-env.d.ts                     # Vite's auto-imported type definitions
-├── .gitignore                            # Specifies files to ignore in Git
-├── README.md                             # Description of the project, usage, etc.
-├── README.old.md                         # Old version of the project description
-├── package.json                          # Frontend dependencies and scripts
-├── package-lock.json                     # Lockfile for frontend dependencies
-├── prettier.config.js                    # Code formatting configuration
-├── tsconfig.json                         # TypeScript config file
-└── vite.config.ts                        # Vite bundler configuration
-server/                   # Backend code
-├── __tests__/                     # Backend tests
-│   ├── database.test.js
-│   └── server.test.js
-├── database/              # Database layer
-│   ├── __tests__/                 # Database tests
-│   │   └── index.test.ts
-│   ├── survey/                    # Survey domain module
-│   │   ├── mongoose/              # Mongoose models and hooks
-│   │   │   ├── __tests__/
-│   │   │   ├── survey.hooks.ts
-│   │   │   └── survey.model.ts
-│   │   ├── zod/                   # Zod validation schemas
-│   │   │   ├── __tests__/
-│   │   │   ├── survey.base.ts
-│   │   │   └── survey.validator.ts
-│   │   ├── survey.controller.ts   # Route operations
-│   │   └── survey.utils.ts        # Utility functions
-│   ├── user/                      # User domain module (same structure as survey)
-│   │   └── ...
-│   ├── seed/                      # Seed domain module (same structure as survey)
-│   │   └── ...
-│   ├── utils/                     # Database utilities
-│   │   ├── constants.ts
-│   │   └── errors.ts
-│   └── index.ts                   # Database module exports
-├── models/               # Mongoose schemas
-│   └── __tests__/                 # Models tests
-│       ├── Survey.test.js
-│       └── Users.test.js
-│   ├── Survey.js                         # Survey entries with responses and geolocation
-│   └── Users.js                          # User accounts, roles, and hashed passwords
-├── routes/               # API routes
-│   ├── __tests__/                 # Routes tests
-│   │   ├── auth.test.js
-│   │   ├── pages.test.js
-│   │   └── surveys.test.js
-│   ├── auth.js                           # Handles login, registration, and approvals
-│   ├── pages.js                          # Future page-level routing logic
-│   └── surveys.js                        # Routes to submit, validate, and fetch surveys
-├── utils/
-│   ├── __tests__/                 # Utils tests
-│   │   └── generateReferralCode.test.js
-│   └── generateReferralCode.js           # Utility to generate unique referral codes
-├── index.ts                              # Main entry point for Express backend
-├── .gitignore                            # Specifies files to ignore in Git
-├── package.json                          # Backend dependencies and scripts
-└── package-lock.json                     # Lockfile for backend dependencies
+client/                   # Client-facing React application (Vite)
+├── dist/                 # Production build output (Vite)
+├── public/               # Static assets (favicon, index.html, manifest, robots.txt)
+├── src/
+│   ├── components/      # Reusable UI (Header, ProtectedRoute, forms)
+│   ├── pages/           # Route-level pages (Login, Survey, StaffDashboard, etc.)
+│   ├── hooks/           # Custom hooks (useAuth, useApi, useAbility)
+│   ├── stores/          # Zustand stores (auth, survey)
+│   ├── contexts/        # React context (AuthProvider)
+│   ├── types/           # TypeScript types
+│   ├── theme/            # MUI theme
+│   ├── App.tsx
+│   ├── index.tsx
+│   └── ...
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+server/                   # Backend (Node.js, Express, TypeScript)
+├── src/
+│   ├── index.ts          # Main entry point
+│   ├── routes/           # API routes (auth.ts, surveys.ts, users.ts, locations.ts, seeds.ts)
+│   ├── database/        # Domain modules (survey, user, seed, location) with mongoose + zod
+│   ├── middleware/      # Auth, validation
+│   ├── permissions/     # CASL ability builder and utils
+│   ├── scripts/         # CLI scripts (superAdminCRUD, locationCRUD, generateSeeds, generateCoupons)
+│   ├── config/          # Swagger, etc.
+│   ├── utils/
+│   └── types/
+├── build/                # Compiled output (tsc)
+├── package.json
+└── .env.example          # Copy to .env with your values
 ```
+
+See the [docs/](docs/) folder for deployment, database migration, and more.
 
 ## Setup Instructions
 
 ### 🔧 Local Development
 
-1. **Clone Repo**
+1. **Clone the repo**
 
 ```bash
 git clone <repository>
 cd <repository>
 ```
 
-2. **Set Environment Variables**
-   Copy paste `.env.example` as `.env` in the `server` directory, and paste the neccessary environment values.
+2. **Set environment variables**
+   Copy `server/.env.example` to `server/.env` in the server directory and fill in the necessary environment values (MongoDB, Twilio, etc.).
 
-3. **Install Packages**
-
-```bash
-npm install
-```
-
-4. **Start Backend Server**
+3. **Install packages**
+   Install dependencies for both client and server:
 
 ```bash
-npm start
+cd client && npm install
+cd ../server && npm install
 ```
 
-5. **Start Frontend Dev Server** (In seperate terminal)
+4. **Start the backend server**
+   For local development (with hot reload):
+
+```bash
+cd server
+npm run dev
+```
+
+   For production-style run: `npm run build` then `npm start`.
+
+5. **Start the frontend dev server** (in a separate terminal)
 
 ```bash
 cd client
 npm run dev
 ```
 
-6. **Visit App** at http://localhost:3000.
+6. **Visit the app** at http://localhost:3000.
 
 ## Future Directions
 
