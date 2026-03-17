@@ -119,8 +119,8 @@ npm run location -- create "<hubName>" <hubType> <locationType> "<address>"
 | Argument | Options | Example |
 |---|---|---|
 | `hubName` | any string (unique) | `"Downtown Hub"` |
-| `hubType` | `ESTABLISHMENT`, `PREMISE` | `ESTABLISHMENT` |
-| `locationType` | `ROOFTOP`, `RANGE` | `ROOFTOP` |
+| `hubType` | `ESTABLISHMENT`, `STREET_ADDRESS`, `PREMISE`, `CHURCH`, `LOCALITY` | `ESTABLISHMENT` |
+| `locationType` | `ROOFTOP`, `APPROXIMATE` | `ROOFTOP` |
 | `address` | full street address | `"123 Main St, City, ST 12345"` |
 
 **Example:**

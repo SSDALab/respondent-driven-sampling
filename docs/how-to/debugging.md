@@ -103,7 +103,7 @@ Server logs stream to the terminal. All route errors and middleware output appea
 
 **Client shows blank page or `Cannot GET /`**
 
-- In development, the Vite dev server must be running on port 3000. The Express server proxies to it in dev mode.
+- In development, both the Vite dev server (port 3000) and the Express server (port 1234) must be running. Vite proxies `/api` requests to Express.
 - In production, `client/dist` must be copied into `server/dist` before deploying.
 
 ---
@@ -128,9 +128,9 @@ cd server && npm run lint
 
 **SWR cache in admin dashboard:** The admin dashboard uses SWR for data fetching with a short cache window. Data may not appear immediately; wait a few seconds or hard-refresh the page.
 
-**Mongoose middleware hooks:** The `User` model uses soft-delete logic via `deletedAt`. Queries that do not explicitly include `deletedAt: null` or use the `findWithDeleted` helper return only non-deleted documents. If a user appears to have disappeared, check for soft-deletion with `npm run super-admin -- list --all`.
+**Soft-delete behaviour:** The `User` and `Survey` models use soft-delete via a `deletedAt` field (schema default: `null`, `select: false`). Standard queries exclude soft-deleted documents. If a user appears to have disappeared, check for soft-deletion with `npm run super-admin -- list --all`.
 
-**CORS setting:** `server/src/index.ts` currently sets CORS to `'*'`. This is acceptable for development and internal-network deployments but should be restricted to the specific frontend URL before any public-facing production deployment.
+**CORS setting:** `server/src/index.ts` currently sets `credentials: true` with `origin: '*'`. Per the Fetch specification, this combination is technically broken for credentialed requests. See [Database and Security](database-and-security.md#cors) for details and the production fix.
 
 ---
 

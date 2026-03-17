@@ -5,7 +5,7 @@ The RDS App is released under the **BSD 3-Clause License**.
 ```
 BSD 3-Clause License
 
-Copyright (c) 2026 University of Washington, eScience Institute,
+Copyright (c) 2024 University of Washington, eScience Institute,
 Scientific Software Engineering Center
 All rights reserved.
 

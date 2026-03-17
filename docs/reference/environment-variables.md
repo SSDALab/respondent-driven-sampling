@@ -19,7 +19,7 @@ cp server/.env.example server/.env
 | `TWILIO_ACCOUNT_SID`  | Yes      | Starts with `AC`              | Twilio Console dashboard                                                             |
 | `TWILIO_AUTH_TOKEN`   | Yes      | 32-char hex                   | Twilio Console dashboard                                                             |
 | `TWILIO_VERIFY_SID`   | Yes      | Starts with `VA`              | Twilio Console → Verify → Services → Service SID                                     |
-| `TWILIO_PHONE_NUMBER` | SMS only | E.164 (e.g. `+12065551234`)   | Twilio Console → Phone Numbers                                                       |
+| `TWILIO_PHONE_NUMBER` | Optional | E.164 (e.g. `+12065551234`)   | Twilio Console → Phone Numbers (not in `.env.example`; add manually if needed)        |
 | `AUTH_SECRET`         | Yes      | Random string, min 32 chars   | `openssl rand -hex 32`                                                               |
 | `TIMEZONE`            | Yes      | tz database name              | See [tz database list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) |
 

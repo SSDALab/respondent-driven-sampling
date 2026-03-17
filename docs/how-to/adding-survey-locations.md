@@ -17,8 +17,8 @@ npm run location -- create "Central Library" ESTABLISHMENT ROOFTOP "1000 4th Ave
 
 | Field | Options | Notes |
 |---|---|---|
-| `hubType` | `ESTABLISHMENT`, `PREMISE` | Use `ESTABLISHMENT` for most sites |
-| `locationType` | `ROOFTOP`, `RANGE` | Use `ROOFTOP` for a specific address |
+| `hubType` | `ESTABLISHMENT`, `STREET_ADDRESS`, `PREMISE`, `CHURCH`, `LOCALITY` | Use `ESTABLISHMENT` for most sites |
+| `locationType` | `ROOFTOP`, `APPROXIMATE` | Use `ROOFTOP` for a specific address |
 
 ## Bulk Import from YAML
 

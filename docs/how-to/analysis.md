@@ -12,7 +12,7 @@ Analysis (RDS estimators, network visualization, population projections) is a se
 
 ## Exporting Data
 
-Survey data can be exported via `mongoexport` (JSON or CSV) or through the admin dashboard's download button. See [Database I/O](../reference/database-io.md) for full export commands and examples.
+Survey data can be exported via `mongoexport` (JSON or CSV). See [Database I/O](../reference/database-io.md) for full export commands and examples.
 
 ## Survey Data Structure
 

@@ -1,6 +1,6 @@
 # RDS App Documentation
 
-The **RDS App** is an open-source web application for conducting Respondent-Driven Sampling (RDS) surveys of unsheltered populations. Developed in partnership with the University of Washington iSchool and the King County Regional Homelessness Authority (KCRHA), the application is designed for reuse by other cities and localities.
+The **RDS App** is an open-source web application for conducting Respondent-Driven Sampling (RDS) surveys of unsheltered populations. Developed in partnership with the University of Washington Department of Sociology and Information School (iSchool), and the King County Regional Homelessness Authority (KCRHA), the application is designed for reuse by other cities and localities.
 
 The codebase is a TypeScript monorepo (React frontend, Node.js/Express backend, MongoDB) requiring a developer familiar with Node.js, a MongoDB instance, and a Twilio account for OTP authentication. Deployment targets Azure App Service, though any Node.js host is compatible.
 
