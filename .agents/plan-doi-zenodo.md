@@ -126,7 +126,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 
 **Tasks:**
 
-- [ ] Create `.zenodo.json` at the repository root
+- [x] Create `.zenodo.json` at the repository root
   - Files: `.zenodo.json` (new file)
   - Changes: Create with the following content. This file adds only Zenodo-specific fields; all author/title/abstract metadata is already handled by `CITATION.cff`.
     ```json
@@ -166,7 +166,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 
 **Tasks:**
 
-- [ ] Update `docs/about/operations.md` — add Zenodo section
+- [x] Update `docs/about/operations.md` — add Zenodo section
   - Files: `docs/about/operations.md`
   - Changes: Append a new `## Zenodo Archiving` section at the end of the file:
     ```markdown
@@ -199,7 +199,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
     4. Commit the update directly to `main`.
     ```
 
-- [ ] Update `docs/about/citation.md` — add DOI placeholder section
+- [x] Update `docs/about/citation.md` — add DOI placeholder section
   - Files: `docs/about/citation.md`
   - Changes: After the `## BibTeX` section, add:
     ```markdown
@@ -215,7 +215,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
     -->
     ```
 
-- [ ] Update `README.md` — add badge placeholder
+- [x] Update `README.md` — add badge placeholder
   - Files: `README.md:1` (top of file, before `## Overview`)
   - Changes: Insert a badge row before the first heading:
     ```markdown
@@ -314,12 +314,12 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 These can be run without human intervention after Phases 1–3 are complete:
 
 - [ ] `cffconvert --validate` exits 0 (`pip install cffconvert`)
-- [ ] `python -m json.tool .zenodo.json` exits 0 (valid JSON)
-- [ ] File `.zenodo.json` exists at repo root
-- [ ] `CITATION.cff` contains `version:` field
-- [ ] `CITATION.cff` contains `date-released:` field
-- [ ] `docs/about/operations.md` contains the string "Zenodo Archiving"
-- [ ] `docs/about/citation.md` contains the string "DOI"
+- [x] `python -m json.tool .zenodo.json` exits 0 (valid JSON)
+- [x] File `.zenodo.json` exists at repo root
+- [x] `CITATION.cff` contains `version:` field
+- [x] `CITATION.cff` contains `date-released:` field
+- [x] `docs/about/operations.md` contains the string "Zenodo Archiving"
+- [x] `docs/about/citation.md` contains the string "DOI"
 - [ ] `mkdocs build` exits 0
 
 After Phase 5 (DOI known):

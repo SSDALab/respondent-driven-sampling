@@ -6,7 +6,7 @@
 
 Classic examples include unsheltered people experiencing homelessness, people who inject drugs, undocumented immigrants, and sex workers. For all of these groups, there is no census or registry to sample from, making traditional probability sampling impossible.
 
-RDS was introduced by Douglas Heckathorn in 1997 and has since been validated as one of the most statistically rigorous approaches for hidden-population research. It combines chain-referral sampling (like snowball sampling) with statistical adjustments that account for the social network structure of the population, allowing valid population estimates to be made.
+Despite a well-established methodological literature RDS has remained difficult to deploy at scale. Field implementation has historically relied on paper coupons and manual tracking of referral chains — a process prone to linkage errors and dependent on significant operational expertise. This application was developed to address that gap: it replaces manual coupon tracking with a QR-code-based referral system. Includes one-time password authentication and device-agnostic data capture — reducing field error and lowering the barrier to adoption. The system was developed and validated through field deployment with the King County Regional Homelessness Authority's Point-in-Time (PIT) count. The detailed methodology can be found here: [https://doi.org/10.1093/aje/kwae342.](https://doi.org/10.1093/aje/kwae342) 
 
 ## How RDS Works
 
@@ -14,13 +14,6 @@ RDS was introduced by Douglas Heckathorn in 1997 and has since been validated as
 2. **Referral coupons:** Each participant who completes a survey receives **3 referral coupons** (unique QR codes). They can share these with peers in their social network who meet eligibility criteria.
 3. **Chain referral:** When a peer uses a coupon to participate, they also receive 3 new coupons to share — and so on, creating a chain of referrals that propagates through the social network.
 4. **Population estimates:** Because each participant's social network size (degree) is recorded, and the probability of being recruited can be modeled from the network structure, RDS allows valid population-level estimates (e.g., proportion unhoused for more than a year) to be calculated from a non-random sample.
-
-## Why It Works Better Than Snowball Sampling
-
-Pure snowball sampling starts from seeds and grows through referrals, but makes no probabilistic claims — the sample is not generalizable. RDS adds two key improvements:
-
-- **Dual incentive:** Participants are incentivized both for completing the survey and for recruiting peers who complete surveys. This improves chain propagation and reduces bias from seeds.
-- **Network-adjusted estimation:** By recording how many people each participant knows who could have been referred, the data can be reweighted to correct for differential recruitment probabilities.
 
 ## How the RDS App Implements This
 

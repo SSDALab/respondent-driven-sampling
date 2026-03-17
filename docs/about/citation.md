@@ -38,6 +38,17 @@ A machine-readable [`CITATION.cff`](https://github.com/uw-ssec/respondent-driven
 }
 ```
 
+## DOI
+
+A persistent DOI will be available via [Zenodo](https://zenodo.org) after the first versioned release is published.
+
+<!-- After Zenodo registration, replace this block with:
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+
+And update the BibTeX block above to include:
+  doi       = {10.5281/zenodo.XXXXXXX},
+-->
+
 ## Citing the RDS Methodology
 
 See [RDS Methodology](rds-methodology.md#further-reading) for the foundational academic references.

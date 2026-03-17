@@ -1,3 +1,7 @@
+<!-- Zenodo DOI badge — replace TODO_ZENODO_DOI with actual DOI after Zenodo registration -->
+[![DOI](https://zenodo.org/badge/DOI/TODO_ZENODO_DOI.svg)](https://doi.org/TODO_ZENODO_DOI)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 ## Overview
 
 > **Documentation:** [uw-ssec.github.io/respondent-driven-sampling](https://uw-ssec.github.io/respondent-driven-sampling/)

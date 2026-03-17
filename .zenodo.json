@@ -1,0 +1,16 @@
+{
+  "upload_type": "software",
+  "communities": [
+    { "identifier": "uw-ssec" }
+  ],
+  "grants": [
+    { "id": "10.13039/100000001::2142964" }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://uw-ssec.github.io/respondent-driven-sampling/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-softwaredocumentation"
+    }
+  ]
+}
