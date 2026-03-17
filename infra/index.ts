@@ -59,19 +59,19 @@ const mongoCluster = new documentdb.MongoCluster("rds-mongo-cluster", {
       enableHa: false,
     },
   ],
+}, {
+  // administratorLoginPassword is write-only and always shows as a diff;
+  // createMode is auto-populated by Azure
+  ignoreChanges: ["administratorLoginPassword", "createMode"],
 });
 
-// Construct the connection string from the cluster output
+// Construct the connection string from config values (not from the cluster
+// output, since the template contains <user>/<password> placeholders)
 const mongoUri = pulumi
-  .all([mongoCluster.connectionString, mongoAdminLogin, mongoAdminPassword])
-  .apply(([connStr, login, password]) => {
-    if (!connStr) {
-      throw new Error("Could not retrieve MongoDB cluster connection string");
-    }
-    return connStr
-      .replace("<user>", encodeURIComponent(login))
-      .replace("<password>", encodeURIComponent(password));
-  });
+  .all([mongoAdminLogin, mongoAdminPassword])
+  .apply(([login, password]) =>
+    `mongodb+srv://${encodeURIComponent(login)}:${encodeURIComponent(password)}@${mongoClusterName}.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000`,
+  );
 
 // ---------------------------------------------------------------------------
 // App Service Plan (Linux)
@@ -80,11 +80,14 @@ const appServicePlan = new web.AppServicePlan("rds-service-plan", {
   name: appServicePlanName,
   resourceGroupName: resourceGroup.name,
   location: resourceGroup.location,
-  kind: "Linux",
+  kind: "linux",
   reserved: true, // Required for Linux plans
   sku: {
     name: skuName,
   },
+}, {
+  // Azure auto-populates these fields; ignoring prevents spurious diffs
+  ignoreChanges: ["elasticScaleEnabled", "isSpot", "maximumElasticWorkerCount", "sku", "targetWorkerCount", "targetWorkerSizeId"],
 });
 
 // ---------------------------------------------------------------------------
@@ -95,6 +98,8 @@ const webApp = new web.WebApp("rds-web-app", {
   resourceGroupName: resourceGroup.name,
   location: resourceGroup.location,
   serverFarmId: appServicePlan.id,
+  httpsOnly: true,
+  clientAffinityEnabled: false,
   siteConfig: {
     linuxFxVersion: `NODE|${nodeVersion}`,
     alwaysOn: true,
@@ -110,6 +115,30 @@ const webApp = new web.WebApp("rds-web-app", {
       { name: "TWILIO_VERIFY_SID", value: twilioVerifySid },
     ],
   },
+}, {
+  // Azure auto-populates these fields; ignoring prevents spurious diffs
+  ignoreChanges: [
+    "clientCertEnabled",
+    "clientCertMode",
+    "containerSize",
+    "customDomainVerificationId",
+    "dailyMemoryTimeQuota",
+    "enabled",
+    "hostNameSslStates",
+    "hostNamesDisabled",
+    "keyVaultReferenceIdentity",
+    "kind",
+    "publicNetworkAccess",
+    "redundancyMode",
+    "reserved",
+    "serverFarmId",
+    "storageAccountRequired",
+    "vnetContentShareEnabled",
+    "vnetImagePullEnabled",
+    "vnetRouteAllEnabled",
+    "siteConfig",
+    "tags",
+  ],
 });
 
 // ---------------------------------------------------------------------------
