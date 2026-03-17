@@ -73,5 +73,4 @@ This project is supported by:
 - UW Population Health Grant Tier 3
 
 ## Contributors
-
-[Contributors](https://github.com/uw-ssec/respondent-driven-sampling/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=uw-ssec/respondent-driven-sampling)](https://github.com/uw-ssec/respondent-driven-sampling/graphs/contributors)
