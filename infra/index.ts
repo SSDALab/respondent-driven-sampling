@@ -11,24 +11,26 @@ const config = new pulumi.Config();
 // Required
 const resourceGroupName = config.require("resourceGroupName");
 const location = config.require("location");
-const cosmosDbAccountName = config.require("cosmosDbAccountName");
-const cosmosDbDatabaseName = config.require("cosmosDbDatabaseName");
+const mongoClusterName = config.require("mongoClusterName");
+const mongoDbName = config.require("mongoDbName");
 const appServicePlanName = config.require("appServicePlanName");
 const webAppName = config.require("webAppName");
-const nodeVersion = config.require("nodeVersion");
 const skuName = config.require("skuName");
 
 // Secrets
+const mongoAdminLogin = config.requireSecret("mongoAdminLogin");
+const mongoAdminPassword = config.requireSecret("mongoAdminPassword");
+const authSecret = config.requireSecret("authSecret");
 const twilioAccountSid = config.requireSecret("twilioAccountSid");
 const twilioAuthToken = config.requireSecret("twilioAuthToken");
 const twilioVerifySid = config.requireSecret("twilioVerifySid");
 
 // Optional with defaults
-const cosmosDbConsistencyLevel =
-  (config.get("cosmosDbConsistencyLevel") ?? "Session") as documentdb.DefaultConsistencyLevel;
-const cosmosDbOfferType =
-  (config.get("cosmosDbOfferType") ?? "Standard") as "Standard";
+const nodeVersion = config.get("nodeVersion") ?? "22-lts";
 const nodeEnv = config.get("nodeEnv") ?? "production";
+const mongoServerVersion = config.get("mongoServerVersion") ?? "8.0";
+const mongoSku = config.get("mongoSku") ?? "M20";
+const mongoDiskSizeGb = config.getNumber("mongoDiskSizeGb") ?? 128;
 
 // ---------------------------------------------------------------------------
 // Resource Group
@@ -39,56 +41,37 @@ const resourceGroup = new resources.ResourceGroup("rds-resource-group", {
 });
 
 // ---------------------------------------------------------------------------
-// Cosmos DB Account (MongoDB API)
+// MongoDB vCore Cluster (Cosmos DB)
 // ---------------------------------------------------------------------------
-const cosmosDbAccount = new documentdb.DatabaseAccount("rds-cosmos-db", {
-  accountName: cosmosDbAccountName,
+const mongoCluster = new documentdb.MongoCluster("rds-mongo-cluster", {
+  mongoClusterName: mongoClusterName,
   resourceGroupName: resourceGroup.name,
   location: resourceGroup.location,
-  kind: "MongoDB",
-  databaseAccountOfferType: cosmosDbOfferType,
-  capabilities: [{ name: "EnableMongo" }],
-  consistencyPolicy: {
-    defaultConsistencyLevel: cosmosDbConsistencyLevel,
-  },
-  locations: [
+  administratorLogin: mongoAdminLogin,
+  administratorLoginPassword: mongoAdminPassword,
+  serverVersion: mongoServerVersion,
+  nodeGroupSpecs: [
     {
-      locationName: resourceGroup.location,
-      failoverPriority: 0,
+      kind: "Shard",
+      nodeCount: 1,
+      sku: mongoSku,
+      diskSizeGB: mongoDiskSizeGb,
+      enableHa: false,
     },
   ],
 });
 
-// ---------------------------------------------------------------------------
-// Cosmos DB MongoDB Database
-// ---------------------------------------------------------------------------
-const mongoDb = new documentdb.MongoDBResourceMongoDBDatabase("rds-mongo-db", {
-  databaseName: cosmosDbDatabaseName,
-  accountName: cosmosDbAccount.name,
-  resourceGroupName: resourceGroup.name,
-  resource: {
-    id: cosmosDbDatabaseName,
-  },
-});
-
-// ---------------------------------------------------------------------------
-// Cosmos DB Connection String
-// ---------------------------------------------------------------------------
-const connectionStrings = pulumi.all([resourceGroup.name, cosmosDbAccount.name]).apply(
-  ([rgName, accountName]) =>
-    documentdb.listDatabaseAccountConnectionStringsOutput({
-      resourceGroupName: rgName,
-      accountName: accountName,
-    }),
-);
-
-const mongoUri = connectionStrings.apply((cs) => {
-  const primary = cs.connectionStrings?.[0]?.connectionString;
-  if (!primary) {
-    throw new Error("Could not retrieve Cosmos DB connection string");
-  }
-  return primary;
-});
+// Construct the connection string from the cluster output
+const mongoUri = pulumi
+  .all([mongoCluster.connectionString, mongoAdminLogin, mongoAdminPassword])
+  .apply(([connStr, login, password]) => {
+    if (!connStr) {
+      throw new Error("Could not retrieve MongoDB cluster connection string");
+    }
+    return connStr
+      .replace("<user>", encodeURIComponent(login))
+      .replace("<password>", encodeURIComponent(password));
+  });
 
 // ---------------------------------------------------------------------------
 // App Service Plan (Linux)
@@ -116,11 +99,12 @@ const webApp = new web.WebApp("rds-web-app", {
     linuxFxVersion: `NODE|${nodeVersion}`,
     alwaysOn: true,
     appSettings: [
-      { name: "WEBSITE_NODE_DEFAULT_VERSION", value: nodeVersion },
       { name: "NODE_ENV", value: nodeEnv },
       { name: "PORT", value: "8080" },
       { name: "SCM_DO_BUILD_DURING_DEPLOYMENT", value: "true" },
       { name: "MONGO_URI", value: mongoUri },
+      { name: "MONGO_DB_NAME", value: mongoDbName },
+      { name: "AUTH_SECRET", value: authSecret },
       { name: "TWILIO_ACCOUNT_SID", value: twilioAccountSid },
       { name: "TWILIO_AUTH_TOKEN", value: twilioAuthToken },
       { name: "TWILIO_VERIFY_SID", value: twilioVerifySid },
@@ -132,4 +116,4 @@ const webApp = new web.WebApp("rds-web-app", {
 // Outputs
 // ---------------------------------------------------------------------------
 export const appServiceUrl = pulumi.interpolate`https://${webApp.defaultHostName}`;
-export const cosmosDbConnectionString = mongoUri;
+export const mongoConnectionString = mongoUri;
