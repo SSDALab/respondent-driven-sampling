@@ -3,9 +3,9 @@
 The RDS App exposes a REST API served by the Express backend. This page gives a high-level overview of the API structure, authentication, and main endpoints.
 
 !!! tip "Swagger UI"
-    An interactive Swagger UI is available at `/api-docs` on any running instance of the app. This provides a live, explorable view of all endpoints with request/response schemas.
-    - Local: [http://localhost:1234/api-docs](http://localhost:1234/api-docs)
-    - Production: `https://your-app.azurewebsites.net/api-docs`
+    An interactive Swagger UI is available at `/documentation` on any running instance of the app.
+    - Local: [http://localhost:1234/documentation](http://localhost:1234/documentation)
+    - Production: `https://your-app.azurewebsites.net/documentation`
 
 ## Base URLs
 
@@ -22,67 +22,61 @@ All protected routes require a JWT Bearer token in the `Authorization` header:
 Authorization: Bearer <JWT>
 ```
 
-Obtain a token by completing the OTP login flow:
+Obtain a token by completing the OTP flow. For new users (signup):
 
-1. `POST /api/v2/auth/send-otp` — sends an OTP to the user's phone
-2. `POST /api/v2/auth/verify-otp` — verifies the OTP, returns a JWT
+1. `POST /api/auth/send-otp-signup` — sends an OTP to the user's phone
+2. `POST /api/auth/verify-otp-signup` — verifies the OTP, creates the account, returns a JWT
+
+For returning users (login):
+
+1. `POST /api/auth/send-otp-login` — sends an OTP to the user's phone
+2. `POST /api/auth/verify-otp-login` — verifies the OTP, returns a JWT
 
 The JWT is valid until `AUTH_SECRET` is rotated or the token expires.
 
-## API Versioning
+## Endpoints
 
-### v1 Routes (Legacy — Deprecated)
+All routes are mounted under `/api/*`. There is no API versioning.
 
-| Path | Purpose |
-|---|---|
-| `/api/auth` | Authentication (v1) |
-| `/api/surveys` | Survey operations (v1) |
-
-v1 routes are being phased out. Do not use them for new integrations.
-
-### v2 Routes (Current)
-
-All new development uses v2 routes at `/api/v2/*`.
-
-## Main v2 Endpoints
+All protected routes use the same `auth` middleware, which verifies the JWT and injects a CASL `Ability` object into the request. Access control is determined by CASL ability checks, not role-specific middleware. The "Auth" column below indicates which roles are granted access by default; actual enforcement is attribute-based (see [CASL Permissions Summary](#casl-permissions-summary)).
 
 ### Auth
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `POST` | `/api/v2/auth/send-otp` | None | Send OTP to phone number |
-| `POST` | `/api/v2/auth/verify-otp` | None | Verify OTP, receive JWT |
+| `POST` | `/api/auth/send-otp-signup` | None | Send OTP for new user registration |
+| `POST` | `/api/auth/send-otp-login` | None | Send OTP for returning user login |
+| `POST` | `/api/auth/verify-otp-signup` | None | Verify OTP, create account, return JWT |
+| `POST` | `/api/auth/verify-otp-login` | None | Verify OTP, return JWT |
 
 ### Users
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/v2/users` | Admin | List users (filterable by location, status) |
-| `GET` | `/api/v2/users/:id` | Admin | Get a specific user |
-| `POST` | `/api/v2/users` | None | Register a new user (creates with PENDING status) |
-| `PATCH` | `/api/v2/users/:id` | Admin | Update user (approve/reject, change location) |
-| `DELETE` | `/api/v2/users/:id` | Admin | Soft-delete a user |
+| `GET` | `/api/users` | Admin, Manager | List users (filterable by location, status) |
+| `GET` | `/api/users/:id` | Admin, Manager | Get a specific user |
+| `POST` | `/api/users` | Admin, Manager | Create a user (admin/manager operation) |
+| `PATCH` | `/api/users/:id` | Admin, Manager | Update user (approve/reject, change location) |
+| `DELETE` | `/api/users/:id` | Admin | Soft-delete a user |
 
 ### Surveys
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/v2/surveys` | Admin | List surveys (filterable by location, date) |
-| `GET` | `/api/v2/surveys/:id` | Admin | Get a specific survey |
-| `POST` | `/api/v2/surveys` | Volunteer | Submit a new survey |
-| `PATCH` | `/api/v2/surveys/:id` | Volunteer\* | Update own survey (same-day, same-location) |
-| `DELETE` | `/api/v2/surveys/:id` | Admin | Delete a survey |
-
-\* Volunteers can only update surveys they created today at their current location (CASL permission check).
+| `GET` | `/api/surveys` | Admin, Manager, Volunteer | List surveys (scoped by CASL) |
+| `GET` | `/api/surveys/:id` | Admin, Manager, Volunteer | Get a specific survey (scoped by CASL) |
+| `POST` | `/api/surveys` | Admin, Manager, Volunteer | Submit a new survey |
+| `PATCH` | `/api/surveys/:id` | Admin, Manager, Volunteer | Update a survey (scoped by CASL) |
+| `DELETE` | `/api/surveys/:id` | Admin | Delete a survey |
 
 ### Seeds
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/v2/seeds` | Admin | List seeds |
-| `GET` | `/api/v2/seeds/:id` | Admin | Get a specific seed |
-| `POST` | `/api/v2/seeds` | Admin | Create a seed manually |
-| `DELETE` | `/api/v2/seeds/:id` | Admin | Delete a seed |
+| `GET` | `/api/seeds` | Admin, Manager, Volunteer | List seeds |
+| `GET` | `/api/seeds/:id` | Admin, Manager, Volunteer | Get a specific seed |
+| `POST` | `/api/seeds` | Admin, Manager, Volunteer | Create a seed |
+| `DELETE` | `/api/seeds/:id` | Admin | Delete a seed |
 
 Seeds are typically created via the `npm run generate-seeds` CLI script, not the API directly.
 
@@ -90,22 +84,29 @@ Seeds are typically created via the `npm run generate-seeds` CLI script, not the
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/v2/locations` | Any | List all locations |
-| `GET` | `/api/v2/locations/:id` | Any | Get a specific location |
-| `POST` | `/api/v2/locations` | Admin | Create a location |
-| `PATCH` | `/api/v2/locations/:id` | Admin | Update a location |
-| `DELETE` | `/api/v2/locations/:id` | Admin | Delete a location |
+| `GET` | `/api/locations` | None | List all locations |
+| `GET` | `/api/locations/:id` | Authenticated | Get a specific location |
+| `POST` | `/api/locations` | Admin | Create a location |
+| `PATCH` | `/api/locations/:id` | Admin | Update a location |
+| `DELETE` | `/api/locations/:id` | Admin | Delete a location |
+
+### Other
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| `GET` | `/api/validate-referral-code/:code` | Authenticated | Validate a referral code |
 
 ## Error Responses
 
-All error responses follow this shape:
+Most error responses return only a `message` field:
 
 ```json
 {
-  "message": "Human-readable error description",
-  "code": "ERROR_CODE_CONSTANT"
+  "message": "Human-readable error description"
 }
 ```
+
+Zod validation errors (HTTP 400) additionally include a `code` field with a machine-readable error constant.
 
 Common HTTP status codes:
 
@@ -113,7 +114,7 @@ Common HTTP status codes:
 |---|---|
 | `400` | Bad request — validation error (Zod) |
 | `401` | Unauthorized — missing or invalid JWT |
-| `403` | Forbidden — approved status check failed, or CASL permission denied |
+| `403` | Forbidden — approval status check failed, or CASL permission denied |
 | `404` | Not found |
 | `409` | Conflict — duplicate resource (e.g. phone already registered) |
 | `500` | Internal server error |
@@ -122,9 +123,10 @@ Common HTTP status codes:
 
 The API enforces permissions using [CASL](https://casl.js.org/). Key access rules:
 
-| Role | Can do |
+| Role | Can Do |
 |---|---|
-| **Super admin** | Everything; can manage all users across all locations |
-| **Admin** | Manage surveys, seeds, and users at their location |
-| **Volunteer** | Submit surveys; update own surveys created today at their location |
-| **Unauthenticated** | View locations; register as new user; receive OTP |
+| **Super Admin** | Everything; manage all users across all locations |
+| **Admin** | Read all users; approve/create volunteers, managers, and admins; manage surveys created today; create and read seeds |
+| **Manager** | Read all users; approve volunteers at own location created today; create and read surveys at own location today; create and read seeds |
+| **Volunteer** | Read and update own profile; create surveys; read and update own surveys created today at own location; create and read seeds |
+| **Unauthenticated** | List locations; complete OTP signup/login flow |

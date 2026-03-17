@@ -48,18 +48,17 @@ server/src/
 ├── middleware/
 │   └── auth.ts                 # JWT verification, approval check, CASL ability injection
 ├── routes/
-│   ├── v1/                     # Legacy routes (deprecated)
-│   └── v2/                     # Current routes
-│       ├── users.ts
-│       ├── surveys.ts
-│       ├── seeds.ts
-│       └── locations.ts
+│   ├── auth.ts
+│   ├── users.ts
+│   ├── surveys.ts
+│   ├── seeds.ts
+│   ├── locations.ts
+│   └── validateReferralCode.ts
 ├── database/
 │   ├── user/
 │   │   ├── mongoose/           # Mongoose model + hooks
 │   │   ├── zod/                # Zod validation schemas
-│   │   ├── user.controller.ts  # Business logic
-│   │   └── user.utils.ts
+│   │   └── user.controller.ts  # Business logic
 │   ├── survey/
 │   ├── seed/
 │   └── location/
@@ -68,12 +67,9 @@ server/src/
 └── config/                     # Swagger, constants
 ```
 
-**Key pattern:** Route files (`routes/v2/*.ts`) call controller functions (`database/{domain}/*.controller.ts`). Business logic lives in controllers, not routes.
+**Key pattern:** Route files (`routes/*.ts`) call controller functions (`database/{domain}/*.controller.ts`). Business logic lives in controllers, not routes.
 
-### API Versioning
-
-- **v1 routes** (`/api/auth`, `/api/surveys`): Legacy, being deprecated. Do not use for new features.
-- **v2 routes** (`/api/v2/users`, `/api/v2/surveys`, `/api/v2/seeds`, `/api/v2/locations`): Current. All v2 routes use Zod validation middleware.
+All routes are mounted under `/api/*` with no versioning. All routes that accept request bodies use Zod validation middleware.
 
 ### Validation
 
@@ -90,8 +86,12 @@ router.post('/', validate(createSurveySchema), surveysController.create);
 ## Auth Flow
 
 ```
-1. Volunteer enters phone number → POST /api/v2/auth/send-otp → Twilio sends SMS OTP
-2. Volunteer enters OTP → POST /api/v2/auth/verify-otp → Server verifies via Twilio Verify API
+1. User enters phone number →
+     New user:       POST /api/auth/send-otp-signup → Twilio sends SMS OTP
+     Returning user: POST /api/auth/send-otp-login  → Twilio sends SMS OTP
+2. User enters OTP →
+     New user:       POST /api/auth/verify-otp-signup → creates account, returns JWT
+     Returning user: POST /api/auth/verify-otp-login  → returns JWT
 3. Server returns JWT → Client stores in Zustand persistent store (localStorage)
 4. All subsequent requests → Authorization: Bearer <JWT> header
 5. Auth middleware:
@@ -115,7 +115,7 @@ APPROVED → PENDING   (admin can reset)
 
 The app uses [CASL](https://casl.js.org/) for role and attribute-based access control.
 
-**Roles:** `super-admin`, `admin`, `volunteer`
+**Roles:** `SUPER_ADMIN`, `ADMIN`, `MANAGER`, `VOLUNTEER`
 
 **Key permission conditions:**
 
@@ -127,9 +127,9 @@ The app uses [CASL](https://casl.js.org/) for role and attribute-based access co
 | `HAS_SAME_LOCATION`  | The resource belongs to the user's current location  |
 
 
-Example: volunteers can only update surveys they created today at their current location. Admins can update any survey at their location.
+Example: volunteers can only update surveys they created today at their current location. Managers can read and update surveys at their location created today. Admins can update any survey created today across all locations.
 
-Permissions are defined in `server/src/permissions/permissions.ts` and the same constants are imported by the frontend (`client/src/hooks/useAbility.tsx`) to mirror permission checks in the UI.
+Permissions are defined in `server/src/permissions/abilityBuilder.ts` and the same constants are imported by the frontend (`client/src/hooks/useAbility.tsx`) to mirror permission checks in the UI.
 
 ## Survey Referral Chain
 
@@ -168,10 +168,11 @@ Child survey codes are 8-character hex strings, globally unique, generated with 
 In production (Azure App Service):
 
 ```
-GitHub push to main branch
+GitHub push to deployment branch
+  (kc-pit-2026 → prod, kc-pit-2026-test → test)
         │
         ▼
-GitHub Actions workflow
+GitHub Actions workflow (azure-webapp-deploy-*.yml)
         │
         ├─ npm run build (client) → client/dist/
         ├─ cp client/dist → server/dist/

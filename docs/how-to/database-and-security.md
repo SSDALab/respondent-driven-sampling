@@ -8,10 +8,10 @@ The RDS App uses **MongoDB** as its data store. All collections reside in a sing
 
 | Collection | Purpose |
 |---|---|
-| `users` | Volunteer and admin accounts. Includes phone, email, role, location, approval status, and soft-delete timestamp. |
-| `locations` | Survey site records. Includes hub name, type, and address. |
-| `surveys` | Individual survey submissions. Includes surveyCode, parentSurveyCode, childSurveyCodes, responses, and timestamps. |
-| `seeds` | Initial QR codes distributed by outreach workers. Each seed has a unique surveyCode tied to a location. |
+| `users` | Volunteer, manager, and admin accounts. Fields: `firstName`, `lastName`, `phone`, `email`, `role`, `locationObjectId`, `approvalStatus`, `approvedByUserObjectId`, `permissions` (CASL action/subject/conditions array), `deletedAt` (soft-delete). |
+| `locations` | Survey site records. Fields: `hubName`, `hubType`, `locationType`, `address`. Note: `hubType` and `locationType` are separate enum fields. |
+| `surveys` | Individual survey submissions. Fields: `surveyCode`, `parentSurveyCode`, `childSurveyCodes`, `responses`, `locationObjectId`, `createdByUserObjectId`, `coordinates` (lat/lng), `isCompleted`, `deletedAt` (soft-delete), timestamps. |
+| `seeds` | Initial QR codes distributed by outreach workers. Fields: `surveyCode`, `locationObjectId`, `isFallback`. |
 
 The codebase organises each collection into a domain folder under `server/src/database/<domain>/` with co-located Mongoose models and Zod schemas. See [Architecture](../reference/architecture.md#backend-architecture) for the full layout.
 
@@ -31,7 +31,9 @@ The most critical variables:
 |---|---|
 | `AUTH_SECRET` | Allows forging JWT tokens and impersonating any user |
 | `MONGO_URI` | Full database access including all survey data and PII |
+| `TWILIO_ACCOUNT_SID` | Identifies the Twilio account; required for all Twilio API operations |
 | `TWILIO_AUTH_TOKEN` | Enables sending SMS from the Twilio number and draining account balance |
+| `TWILIO_VERIFY_SID` | Identifies the Twilio Verify service; allows initiating OTP verification flows |
 
 ### Rotating Secrets
 
@@ -48,13 +50,17 @@ If a secret is accidentally exposed:
 - [ ] `.env` is NOT committed to the repository
 - [ ] MongoDB Atlas IP allowlist is restricted (not `0.0.0.0/0`)
 - [ ] MongoDB Atlas user has only the required permissions (readWrite on the app database, not `atlasAdmin`)
+- [ ] CORS `origin` is set to the specific frontend URL (not `*`); see [CORS](#cors) below
+- [ ] `TWILIO_ACCOUNT_SID` and `TWILIO_VERIFY_SID` are configured
 
 ### CORS
 
-The server currently sets `Access-Control-Allow-Origin: *` in `server/src/index.ts`. This is acceptable for development but should be restricted to the specific frontend URL before any public-facing deployment:
+The server currently sets `credentials: true` with `origin: '*'` in `server/src/index.ts`. Per the [Fetch specification](https://fetch.spec.whatwg.org/#http-access-control-allow-origin), browsers silently reject credentialed requests when `origin` is `*`, so this configuration is technically broken for any request that sends credentials. This should be tracked and fixed as a separate issue.
+
+For production, restrict the origin to the specific frontend URL:
 
 ```typescript
-app.use(cors({ origin: 'https://your-azure-app.azurewebsites.net' }));
+app.use(cors({ origin: 'https://your-azure-app.azurewebsites.net', credentials: true }));
 ```
 
 ### Security Headers
