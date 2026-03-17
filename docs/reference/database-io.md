@@ -1,4 +1,4 @@
-# Database Migration
+# Database I/O
 
 This page covers exporting and importing MongoDB data using the `mongoexport` and `mongoimport` tools. These commands are useful for:
 
@@ -18,9 +18,9 @@ brew install mongodb-database-tools
 sudo apt install mongodb-database-tools
 ```
 
-## Exporting data
+## Exporting Data
 
-### Export the surveys collection
+### Export the Surveys Collection
 
 ```bash
 mongoexport \
@@ -29,7 +29,7 @@ mongoexport \
   --out <filepath>/<host>-surveys.json
 ```
 
-### Export the users collection
+### Export the Users Collection
 
 ```bash
 mongoexport \
@@ -38,7 +38,7 @@ mongoexport \
   --out <filepath>/<host>-users.json
 ```
 
-### Export all collections (example script)
+### Export All Collections (Example Script)
 
 ```bash
 #!/bin/bash
@@ -52,7 +52,7 @@ for collection in surveys users seeds locations; do
 done
 ```
 
-### Export as CSV (for analysis)
+### Export as CSV (For Analysis)
 
 ```bash
 mongoexport \
@@ -65,9 +65,9 @@ mongoexport \
 
 See [Post-Survey Analysis](../how-to/analysis.md) for how to use the exported CSV for RDS population estimation.
 
-## Importing data
+## Importing Data
 
-### Import the surveys collection
+### Import the Surveys Collection
 
 ```bash
 mongoimport \
@@ -76,7 +76,7 @@ mongoimport \
   --file <filepath>-surveys.json
 ```
 
-### Import the users collection
+### Import the Users Collection
 
 ```bash
 mongoimport \
@@ -85,7 +85,7 @@ mongoimport \
   --file <filepath>-users.json
 ```
 
-### Import with upsert (avoid duplicates)
+### Import with Upsert (Avoid Duplicates)
 
 If importing into a database that may already have some records, use `--mode=upsert` with `--upsertFields=_id`:
 

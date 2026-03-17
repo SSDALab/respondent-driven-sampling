@@ -137,7 +137,7 @@ npm run location -- create "Burien Community Center" ESTABLISHMENT ROOFTOP "1470
 npm run location -- import path/to/locations.yaml
 ```
 
-See [Configuration → Locations YAML format](../getting-started/configuration.md#locations-yaml-format) for the YAML schema.
+See [Adding Survey Locations](../how-to/adding-survey-locations.md) for the YAML schema.
 
 ---
 
@@ -218,7 +218,7 @@ npm run generate-seeds -- 507f1f77bcf86cd799439011 25
 - Generates a PDF at `server/src/scripts/seeds/seeds-<location>-<timestamp>.pdf`
 - Each page of the PDF contains one QR code and participant-facing instructions
 
-### PDF contents
+### PDF Contents
 
 The generated PDF pages include:
 - Campaign title (currently hardcoded for King County; customize in the script)

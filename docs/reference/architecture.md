@@ -1,6 +1,6 @@
 # Architecture
 
-## High-level overview
+## High-Level Overview
 
 The RDS App is a **monolithic React + Node.js application**. The Express backend serves the React frontend as static files in production, so the entire application is deployed as a single Azure App Service.
 
@@ -38,7 +38,7 @@ respondent-driven-sampling/
 
 In development, the Vite dev server runs on port 3000 and proxies API requests to Express on port 1234. In production, Express serves the compiled React `dist/` directly.
 
-## Backend architecture
+## Backend Architecture
 
 The backend uses a **domain-driven layered structure**, distinct from typical Express apps:
 
@@ -70,7 +70,7 @@ server/src/
 
 **Key pattern:** Route files (`routes/v2/*.ts`) call controller functions (`database/{domain}/*.controller.ts`). Business logic lives in controllers, not routes.
 
-### API versioning
+### API Versioning
 
 - **v1 routes** (`/api/auth`, `/api/surveys`): Legacy, being deprecated. Do not use for new features.
 - **v2 routes** (`/api/v2/users`, `/api/v2/surveys`, `/api/v2/seeds`, `/api/v2/locations`): Current. All v2 routes use Zod validation middleware.
@@ -87,7 +87,7 @@ All API request bodies are validated with [Zod](https://zod.dev/). Schema files:
 router.post('/', validate(createSurveySchema), surveysController.create);
 ```
 
-## Auth flow
+## Auth Flow
 
 ```
 1. Volunteer enters phone number → POST /api/v2/auth/send-otp → Twilio sends SMS OTP
@@ -101,7 +101,7 @@ router.post('/', validate(createSurveySchema), surveysController.create);
    d. Builds CASL Ability object and injects into req.authorization
 ```
 
-### Approval flow
+### Approval Flow
 
 New users register with `approvalStatus: PENDING`. They can receive OTP codes but cannot access any protected routes until an admin or super-admin sets their status to `APPROVED` via the admin dashboard or the CLI.
 
@@ -119,17 +119,19 @@ The app uses [CASL](https://casl.js.org/) for role and attribute-based access co
 
 **Key permission conditions:**
 
-| Condition | Meaning |
-|---|---|
-| `IS_CREATED_BY_SELF` | The resource was created by the requesting user |
-| `WAS_CREATED_TODAY` | The resource was created on the current calendar day |
-| `HAS_SAME_LOCATION` | The resource belongs to the user's current location |
+
+| Condition            | Meaning                                              |
+| -------------------- | ---------------------------------------------------- |
+| `IS_CREATED_BY_SELF` | The resource was created by the requesting user      |
+| `WAS_CREATED_TODAY`  | The resource was created on the current calendar day |
+| `HAS_SAME_LOCATION`  | The resource belongs to the user's current location  |
+
 
 Example: volunteers can only update surveys they created today at their current location. Admins can update any survey at their location.
 
 Permissions are defined in `server/src/permissions/permissions.ts` and the same constants are imported by the frontend (`client/src/hooks/useAbility.tsx`) to mirror permission checks in the UI.
 
-## Survey referral chain
+## Survey Referral Chain
 
 ```
 Seed (surveyCode: "A1B2C3D4", parentSurveyCode: null)
@@ -151,15 +153,17 @@ Survey A (surveyCode: "A1B2C3D4")
 
 **Key fields in the `surveys` collection:**
 
-| Field | Description |
-|---|---|
-| `surveyCode` | The code that was scanned to start this survey |
-| `parentSurveyCode` | The code that referred this participant |
+
+| Field              | Description                                           |
+| ------------------ | ----------------------------------------------------- |
+| `surveyCode`       | The code that was scanned to start this survey        |
+| `parentSurveyCode` | The code that referred this participant               |
 | `childSurveyCodes` | Array of 3 unique codes for this participant to share |
+
 
 Child survey codes are 8-character hex strings, globally unique, generated with retry logic (`server/src/database/survey/survey.controller.ts: generateUniqueChildSurveyCodes`).
 
-## Deployment architecture
+## Deployment Architecture
 
 In production (Azure App Service):
 
@@ -182,11 +186,11 @@ GitHub Actions workflow
           /*     → server/dist/ (React SPA)
 ```
 
-## Path aliases
+## Path Aliases
 
 Both client and server use `@/*` imports:
 
-- **Server:** `tsconfig.json` + `tsc-alias` build step resolves `@/*` → `src/*`
-- **Client:** Vite resolves `@/*` → `src/*`, plus `@/permissions/*` → `../server/src/permissions/*` for shared constants
+- **Server:** `tsconfig.json` + `tsc-alias` build step resolves `@/`* → `src/*`
+- **Client:** Vite resolves `@/`* → `src/*`, plus `@/permissions/*` → `../server/src/permissions/*` for shared constants
 
 This means the client can directly import server-side permission constants without duplicating them.

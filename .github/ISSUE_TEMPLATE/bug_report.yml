@@ -1,4 +1,4 @@
-name: "🐞 Bug report"
+name: " Bug report"
 description: "File a reproducible problem with the software."
 title: "[Bug]: <short summary>"
 labels: ["bug", "triage"]
@@ -71,4 +71,4 @@ body:
       label: Other environment details
   - type: markdown
     attributes:
-      value: "Thank you for helping us improve! 🙏"
+      value: "Thank you for helping us improve! "

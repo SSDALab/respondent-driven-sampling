@@ -40,16 +40,18 @@ markdown_extensions:
 nav:
   - Home: index.md
   - About:
-      - RDS Methodology: about/rds-methodology.md
       - Project Overview: about/project-overview.md
+      - RDS Methodology: about/rds-methodology.md
+      - Operations: about/operations.md
+      - License: about/license.md
+      - Citation: about/citation.md
   - Getting Started:
-      - Prerequisites: getting-started/prerequisites.md
-      - Quickstart: getting-started/quickstart.md
-      - Configuration: getting-started/configuration.md
+      - Getting Started: getting-started/getting-started.md
+
   - How-To:
       - Deployment: how-to/deployment.md
-      - Experimental Setup: how-to/experimental-setup.md
-      - Onboarding Localities: how-to/onboarding-localities.md
+      - Setting Up a Survey: how-to/setting-up-a-survey.md
+      - Adding Survey Locations: how-to/adding-survey-locations.md
       - Debugging: how-to/debugging.md
       - Database & Security: how-to/database-and-security.md
       - Post-Survey Analysis: how-to/analysis.md
@@ -59,8 +61,5 @@ nav:
       - Environment Variables: reference/environment-variables.md
       - CLI Scripts: reference/cli-scripts.md
       - API Overview: reference/api.md
-      - Database Migration: reference/database-migration.md
-  - Contributing:
-      - How to Contribute: contributing/index.md
-      - Release Process: contributing/release-process.md
-      - Operations: contributing/operations.md
+      - Database I/O: reference/database-io.md
+      - Glossary: reference/glossary.md

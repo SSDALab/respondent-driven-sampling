@@ -1,4 +1,4 @@
-name: "📚 Documentation gap"
+name: " Documentation gap"
 description: "Report missing or confusing docs."
 title: "[Docs]: <short summary>"
 labels: ["documentation"]

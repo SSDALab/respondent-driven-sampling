@@ -29,9 +29,9 @@ Obtain a token by completing the OTP login flow:
 
 The JWT is valid until `AUTH_SECRET` is rotated or the token expires.
 
-## API versioning
+## API Versioning
 
-### v1 routes (legacy — deprecated)
+### v1 Routes (Legacy — Deprecated)
 
 | Path | Purpose |
 |---|---|
@@ -40,11 +40,11 @@ The JWT is valid until `AUTH_SECRET` is rotated or the token expires.
 
 v1 routes are being phased out. Do not use them for new integrations.
 
-### v2 routes (current)
+### v2 Routes (Current)
 
 All new development uses v2 routes at `/api/v2/*`.
 
-## Main v2 endpoints
+## Main v2 Endpoints
 
 ### Auth
 
@@ -96,7 +96,7 @@ Seeds are typically created via the `npm run generate-seeds` CLI script, not the
 | `PATCH` | `/api/v2/locations/:id` | Admin | Update a location |
 | `DELETE` | `/api/v2/locations/:id` | Admin | Delete a location |
 
-## Error responses
+## Error Responses
 
 All error responses follow this shape:
 
@@ -118,7 +118,7 @@ Common HTTP status codes:
 | `409` | Conflict — duplicate resource (e.g. phone already registered) |
 | `500` | Internal server error |
 
-## CASL permissions summary
+## CASL Permissions Summary
 
 The API enforces permissions using [CASL](https://casl.js.org/). Key access rules:
 

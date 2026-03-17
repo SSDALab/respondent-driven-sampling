@@ -1,75 +1,75 @@
 # Debugging
 
-## For field enumerators (volunteers)
+## For Field Enumerators (Volunteers)
 
-This section covers common issues that volunteers (enumerators) encounter in the field during a campaign.
+Common issues encountered in the field during a campaign.
 
-### Can't log in
+### Cannot Log In
 
-**Problem:** The login page accepts my phone number but I never receive an OTP code.
+**Problem:** The login page accepts the phone number but no OTP code arrives.
 
-- Check that you have a cell signal or Wi-Fi connection.
-- Verify the phone number is in the correct format (just the 10-digit number; no country code needed on the login form).
-- Ask your campaign coordinator to confirm your account has been **approved** in the admin dashboard. New accounts start as Pending and require admin approval before the OTP flow will work.
-- If the issue persists, contact your campaign coordinator to check the Twilio delivery logs.
+- Confirm the device has cell signal or Wi-Fi.
+- The phone number should be entered as a 10-digit number without a country code.
+- New accounts start as **Pending** and require admin approval before the OTP flow works. The campaign coordinator can confirm approval status in the admin dashboard.
+- If the issue persists, the coordinator should check the Twilio delivery logs.
 
-**Problem:** I receive the OTP but the app shows "invalid code."
+**Problem:** The OTP is received but the app shows "invalid code."
 
-- OTP codes expire after 10 minutes. Request a new one and enter it immediately.
-- Make sure you are entering the most recent code (not a previously received one).
+- OTP codes expire after 10 minutes. Request a new code and enter it immediately.
+- Ensure the most recent code is being entered, not a previously received one.
 
-**Problem:** After logging in I see "Access Denied" or a blank page.
+**Problem:** After login, the screen shows "Access Denied" or is blank.
 
-- Your account may not yet be approved. Contact your coordinator.
-- Try refreshing the page. If the issue persists, log out and back in.
-
----
-
-### Survey not loading
-
-**Problem:** I scanned a QR code but the survey page won't load.
-
-- Check your internet connection. The app requires an active connection to submit surveys.
-- Confirm you scanned the correct QR code (the one from a printed seed or referral coupon, not a generic URL).
-- Try opening the URL from the QR code directly in your browser.
-
-**Problem:** The survey loaded but my progress was lost when I came back.
-
-- Surveys are not saved locally; if the session expires or the browser is closed, progress is lost.
-- Complete each survey in a single sitting without closing the browser.
+- The account may not yet be approved. Contact the coordinator.
+- Refresh the page. If the issue persists, log out and log back in.
 
 ---
 
-### QR code not scanning
+### Survey Not Loading
 
-- Ensure the camera has permission to access the QR scanner in the browser (the app will prompt; tap "Allow").
-- Make sure the QR code is flat, undamaged, and well-lit.
-- Hold the camera steady at 15–30 cm from the code and wait a moment for it to focus.
-- If scanning still fails, you can type the coupon code manually if the printed coupon shows the text code below the QR image.
+**Problem:** A QR code was scanned but the survey page does not load.
 
----
+- An active internet connection is required to load and submit surveys.
+- Confirm the scanned QR code is from a printed seed or referral coupon, not a generic URL.
+- Try opening the URL from the QR code directly in the browser.
 
-### Referral code issues
+**Problem:** Survey progress was lost after returning to the page.
 
-**Problem:** A participant says their referral coupon isn't working.
-
-- Each coupon code can only be used once. If it has already been used, it will show an error.
-- Verify the code is being entered correctly (case-insensitive, but no extra spaces).
-- Contact the campaign coordinator if the code is showing as invalid but hasn't been used.
+- Surveys are not saved locally. If the session expires or the browser is closed, progress is lost.
+- Each survey should be completed in a single sitting without closing the browser.
 
 ---
 
-### Who to contact
+### QR Code Not Scanning
 
-If an issue isn't resolved by the steps above, contact your campaign coordinator or site manager. For technical issues that persist across multiple devices or sites, escalate to the development team.
+- The browser must have camera permission (the app prompts on first use).
+- The QR code should be flat, undamaged, and well-lit.
+- Hold the camera steady at 15–30 cm from the code and allow it to focus.
+- If scanning still fails, the coupon code can be typed manually if the printed coupon shows the text code below the QR image.
 
 ---
 
-## For developers and maintainers
+### Referral Code Issues
 
-### Running locally
+**Problem:** A participant's referral coupon is not working.
 
-See the [Quickstart](../getting-started/quickstart.md) for initial setup. Once set up, the main commands are:
+- Each coupon code can only be used once. A previously used code will return an error.
+- Codes are case-insensitive but must not contain extra spaces.
+- If the code appears valid but returns an error, escalate to the campaign coordinator.
+
+---
+
+### Escalation
+
+Issues not resolved by the steps above should be reported to the campaign coordinator or site manager. Technical issues affecting multiple devices or sites should be escalated to the development team.
+
+---
+
+## For Developers and Maintainers
+
+### Running Locally
+
+See [Getting Started](../getting-started/getting-started.md) for initial setup. The main commands:
 
 ```bash
 # Backend (hot reload with tsx)
@@ -83,12 +83,12 @@ Server logs stream to the terminal. All route errors and middleware output appea
 
 ---
 
-### Common environment issues
+### Common Environment Issues
 
 **`MongoServerError: bad auth`**
 
-- Your `MONGO_URI` is incorrect or the database user credentials are wrong.
-- Verify the connection string in Atlas and that the user has read/write access.
+- The `MONGO_URI` is incorrect or the database user credentials are wrong.
+- Verify the connection string in Atlas and confirm the user has read/write access.
 
 **`TWILIO_VERIFY_SID` errors / OTP not sending**
 
@@ -98,17 +98,17 @@ Server logs stream to the terminal. All route errors and middleware output appea
 
 **JWT errors / "unauthorized" after login**
 
-- Check that `AUTH_SECRET` is set and non-empty. All existing sessions are invalidated if this value changes.
-- JWT tokens expire; test by logging out and back in.
+- Confirm `AUTH_SECRET` is set and non-empty. All existing sessions are invalidated if this value changes.
+- JWT tokens expire; test by logging out and logging back in.
 
 **Client shows blank page or `Cannot GET /`**
 
-- In development, make sure the Vite dev server is running on port 3000. The Express server proxies to it in dev mode.
-- In production, ensure `client/dist` has been copied into `server/dist` before deploying.
+- In development, the Vite dev server must be running on port 3000. The Express server proxies to it in dev mode.
+- In production, `client/dist` must be copied into `server/dist` before deploying.
 
 ---
 
-### Running tests and lint
+### Running Tests and Lint
 
 ```bash
 # Server tests
@@ -122,21 +122,21 @@ cd server && npm run lint
 
 ---
 
-### Known gotchas
+### Known Gotchas
 
-**Survey code uniqueness:** Survey codes are generated with a uniqueness check. If you see errors about duplicate codes during seed generation, it usually means the random space is exhausted for short codes — increase the code length in `generateUniqueSurveyCode`.
+**Survey code uniqueness:** Survey codes are generated with a uniqueness check. Errors about duplicate codes during seed generation usually indicate the random space is exhausted for short codes — increase the code length in `generateUniqueSurveyCode`.
 
-**SWR cache in admin dashboard:** The admin dashboard uses SWR for data fetching with a short cache window. If you expect data to appear but don't see it, wait a few seconds or hard-refresh the page. Stale-while-revalidate means the cached data is shown first, then updated.
+**SWR cache in admin dashboard:** The admin dashboard uses SWR for data fetching with a short cache window. Data may not appear immediately; wait a few seconds or hard-refresh the page.
 
-**Mongoose middleware hooks:** The `User` model has soft-delete logic via `deletedAt`. Queries that don't explicitly include `deletedAt: null` or use the `findWithDeleted` helper will only return non-deleted documents. If a user "disappears" unexpectedly, check if they were soft-deleted and use `npm run super-admin -- list --all` to see all users including deleted ones.
+**Mongoose middleware hooks:** The `User` model uses soft-delete logic via `deletedAt`. Queries that do not explicitly include `deletedAt: null` or use the `findWithDeleted` helper return only non-deleted documents. If a user appears to have disappeared, check for soft-deletion with `npm run super-admin -- list --all`.
 
-**CORS setting:** `server/src/index.ts` currently sets CORS to `'*'`. This is fine for development and internal-network-only deployments, but should be changed to the specific frontend URL before any public-facing production deployment.
+**CORS setting:** `server/src/index.ts` currently sets CORS to `'*'`. This is acceptable for development and internal-network deployments but should be restricted to the specific frontend URL before any public-facing production deployment.
 
 ---
 
-### Pre-commit hooks
+### Pre-Commit Hooks
 
-If pre-commit checks are failing:
+If pre-commit checks fail:
 
 ```bash
 pre-commit run --all-files
@@ -145,7 +145,7 @@ pre-commit run --all-files
 To skip a check temporarily (use sparingly):
 
 ```bash
-SKIP=eslint git commit -m "your message"
+SKIP=eslint git commit -m "message"
 ```
 
-See [CI / Workflows](ci.md) for what each hook checks.
+See [CI / Workflows](ci.md) for the full list of hooks and checks.
