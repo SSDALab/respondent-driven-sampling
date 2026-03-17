@@ -29,7 +29,7 @@ The work splits cleanly into **programmatic changes** (file edits that code can 
 - `docs/about/citation.md` — Human-readable citation page added in the MkDocs phase. References `CITATION.cff` but contains no DOI or Zenodo badge because no DOI exists yet.
 - `README.md` — Has a documentation link at the top but no badge row. No Zenodo badge.
 - `.github/release.yml` — Changelog exclusion config (dependabot, pre-commit). No Zenodo-related steps.
-- `docs/contributing/release-process.md` — Documents tag → GitHub Release process. No mention of Zenodo archiving.
+- `docs/about/operations.md` — Covers maintainer infrastructure and access. No mention of Zenodo archiving or the release process.
 - `.zenodo.json` — **Does not exist.** This optional file at the repo root lets maintainers add Zenodo-specific metadata (communities, grants, related identifiers) that `CITATION.cff` does not support.
 
 **Current Limitations:**
@@ -43,7 +43,7 @@ The work splits cleanly into **programmatic changes** (file edits that code can 
 **New Behavior:**
 1. Every time a maintainer publishes a GitHub Release, Zenodo automatically archives it and updates the DOI record.
 2. The concept DOI (stable across all versions) is embedded in `CITATION.cff`, the README, and `docs/about/citation.md`.
-3. The release process checklist includes a Zenodo verification step.
+3. `docs/about/operations.md` documents the one-time Zenodo setup and per-release verification steps for maintainers.
 4. `CITATION.cff` has complete version metadata so each Zenodo archive record is well-formed.
 
 **Success Looks Like:**
@@ -51,7 +51,7 @@ The work splits cleanly into **programmatic changes** (file edits that code can 
 - `CITATION.cff` contains `doi: 10.5281/zenodo.XXXXXXX` and a valid `date-released`.
 - README displays a Zenodo DOI badge linking to the Zenodo record.
 - `docs/about/citation.md` includes the DOI in the BibTeX block and a badge.
-- `docs/contributing/release-process.md` includes a Zenodo verification step in the release checklist.
+- `docs/about/operations.md` includes the Zenodo setup and release verification steps.
 
 ## What We're NOT Doing
 
@@ -103,7 +103,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 
 **Tasks:**
 
-- [ ] Add `version` and `date-released` fields to `CITATION.cff`
+- [x] Add `version` and `date-released` fields to `CITATION.cff`
   - Files: `CITATION.cff`
   - Changes: Insert after the `keywords` block:
     ```yaml
@@ -166,39 +166,37 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 
 **Tasks:**
 
-- [ ] Update `docs/contributing/release-process.md` — add Zenodo step to release checklist
-  - Files: `docs/contributing/release-process.md`
-  - Changes: After step 3 ("Publish on GitHub"), add:
+- [ ] Update `docs/about/operations.md` — add Zenodo section
+  - Files: `docs/about/operations.md`
+  - Changes: Append a new `## Zenodo Archiving` section at the end of the file:
     ```markdown
-    4. **Verify Zenodo archiving (if Zenodo integration is enabled):**
-       - Wait 1–2 minutes after publishing the GitHub Release.
-       - Check [zenodo.org/account/settings/github](https://zenodo.org/account/settings/github) to confirm the release was archived.
-       - The new version record appears at `https://zenodo.org/records/<id>`.
-       - Update `CITATION.cff` with the new `version`, `date-released`, and `doi` fields.
-       - Commit the `CITATION.cff` update directly to `main` (no PR needed for metadata-only changes).
-    ```
-  - Also add a "First-time Zenodo setup" subsection at the bottom of the file (see content below in the new section task).
+    ## Zenodo Archiving
 
-- [ ] Add "First-time Zenodo setup" section to `docs/contributing/release-process.md`
-  - Files: `docs/contributing/release-process.md` (append new section)
-  - Changes: Append at the end of the file:
-    ```markdown
-    ## First-time Zenodo setup (one-time, human-required)
+    ### First-Time Setup (One-Time, Human-Required)
 
     Zenodo registration cannot be automated — it requires a repository maintainer with admin access to perform the following steps once:
 
     1. Go to [zenodo.org](https://zenodo.org) and sign in with GitHub.
     2. Navigate to **Account → Settings → GitHub**.
     3. Find `uw-ssec/respondent-driven-sampling` in the repository list and toggle it **On**.
-    4. Publish a GitHub Release (following the release process above).
-    5. Zenodo will automatically archive the release and issue a DOI within 1–2 minutes.
-    6. Find the concept DOI (stable across all versions) on the Zenodo record page.
-    7. Update `CITATION.cff` with `doi: 10.5281/zenodo.XXXXXXX`.
-    8. Update `docs/about/citation.md` with the DOI and badge.
-    9. Update `README.md` to replace the `TODO_ZENODO_DOI` badge placeholder with the real DOI.
+    4. Publish a GitHub Release (tag: `v1.0.0` or appropriate).
+    5. Zenodo archives the release and issues a DOI within 1–2 minutes.
+    6. Copy the concept DOI (stable across all versions) from the Zenodo record page.
+    7. Update `CITATION.cff` with `doi: 10.5281/zenodo.XXXXXXX`, `version`, and `date-released`.
+    8. Update `docs/about/citation.md` with the DOI badge and BibTeX `doi` field.
+    9. Update `README.md` to replace the `TODO_ZENODO_DOI` placeholder with the real DOI.
     10. Commit and push these updates to `main`.
 
-    After first-time setup, steps 1–3 are permanent — future releases are archived automatically.
+    After first-time setup, future GitHub Releases are archived automatically.
+
+    ### Per-Release Verification
+
+    After publishing each subsequent GitHub Release:
+
+    1. Wait 1–2 minutes.
+    2. Check [zenodo.org/account/settings/github](https://zenodo.org/account/settings/github) to confirm the release was archived.
+    3. Update `CITATION.cff` with the new `version` and `date-released`.
+    4. Commit the update directly to `main`.
     ```
 
 - [ ] Update `docs/about/citation.md` — add DOI placeholder section
@@ -230,7 +228,7 @@ Zenodo reads `CITATION.cff` natively for author, title, license, and abstract me
 **Dependencies:** Phases 1 and 2 should complete first, but this phase is independent.
 
 **Verification:**
-- [ ] `docs/contributing/release-process.md` contains the "First-time Zenodo setup" section.
+- [ ] `docs/about/operations.md` contains the `## Zenodo Archiving` section.
 - [ ] `docs/about/citation.md` contains the `## DOI` section.
 - [ ] `README.md` contains the `TODO_ZENODO_DOI` badge placeholder.
 - [ ] `mkdocs build` exits 0 with no warnings.
@@ -320,7 +318,7 @@ These can be run without human intervention after Phases 1–3 are complete:
 - [ ] File `.zenodo.json` exists at repo root
 - [ ] `CITATION.cff` contains `version:` field
 - [ ] `CITATION.cff` contains `date-released:` field
-- [ ] `docs/contributing/release-process.md` contains the string "First-time Zenodo setup"
+- [ ] `docs/about/operations.md` contains the string "Zenodo Archiving"
 - [ ] `docs/about/citation.md` contains the string "DOI"
 - [ ] `mkdocs build` exits 0
 
@@ -387,7 +385,7 @@ All documentation updates are the content of this plan itself:
 
 - [ ] `CITATION.cff` — add `version`, `date-released`, and (Phase 5) `doi`
 - [ ] `.zenodo.json` — new file, Zenodo-specific metadata
-- [ ] `docs/contributing/release-process.md` — add Zenodo step and first-time setup section
+- [ ] `docs/about/operations.md` — add `## Zenodo Archiving` section with first-time setup and per-release steps
 - [ ] `docs/about/citation.md` — add DOI section and (Phase 5) badge and BibTeX `doi` field
 - [ ] `README.md` — add badge placeholder (Phase 3) and real badge (Phase 5)
 
@@ -402,7 +400,7 @@ All documentation updates are the content of this plan itself:
 - `CITATION.cff`
 - `README.md`
 - `docs/about/citation.md`
-- `docs/contributing/release-process.md`
+- `docs/about/operations.md`
 - `.github/release.yml`
 - `.github/workflows/docs.yml`
 
@@ -419,3 +417,8 @@ All documentation updates are the content of this plan itself:
 
 ### Version 1.0 — 2026-03-16
 - Initial plan created.
+
+### Version 1.1 — 2026-02-20
+- `docs/contributing/release-process.md` was deleted during the MkDocs documentation refactor; all references redirected to `docs/about/operations.md`.
+- Phase 3 tasks rewritten to append a `## Zenodo Archiving` section (first-time setup + per-release verification) to `docs/about/operations.md`.
+- Updated Desired End State, Success Criteria, Documentation Updates, and References accordingly.
