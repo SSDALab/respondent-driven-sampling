@@ -10,9 +10,7 @@ The RDS App is an open-source web application for conducting **Respondent-Driven
 
 The codebase is a TypeScript monorepo: React frontend (`client/`), Node.js/Express backend (`server/`), and MongoDB for data storage. Authentication is handled via Twilio Verify (OTP). The present deployment is through Azure App Service.
 
-## Setup Instructions
-
-### Local Development
+## Local Development
 
 1. **Clone the repo**
 
@@ -21,16 +19,40 @@ git clone https://github.com/uw-ssec/respondent-driven-sampling.git
 cd respondent-driven-sampling
 ```
 
-1. **Set environment variables**
-  Copy `server/.env.example` to your local `server/.env` and fill in the required values (MongoDB, Twilio, etc.). See the [Environment Variables](https://uw-ssec.github.io/respondent-driven-sampling/reference/environment-variables/) reference for details.
-2. **Install packages**
+2. **Set environment variables**
+
+   Copy the template to create your local env file:
+
+   ```bash
+   cp server/.env.example server/.env
+   ```
+
+   Open `server/.env` and fill in your values:
+
+   ```dotenv
+   NODE_ENV=development
+   MONGO_URI=mongodb+srv://YOUR_USER:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/
+   MONGO_DB_NAME=rds-your-db-name
+   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_AUTH_TOKEN=your_twilio_auth_token
+   TWILIO_VERIFY_SID=VAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   AUTH_SECRET=paste_output_of_openssl_rand_-hex_32
+   TIMEZONE=America/Los_Angeles
+   ```
+
+   > **Where do I get these values?**
+   > `MONGO_URI` and `MONGO_DB_NAME` come from [MongoDB Atlas](https://www.mongodb.com/atlas) (Connect → Drivers). `TWILIO_*` values come from the [Twilio Console](https://console.twilio.com). Generate `AUTH_SECRET` with `openssl rand -hex 32`. These credentials are **not** included in the repository — obtain them from your own accounts or your organisation's secrets store. See the full [Environment Variables](https://uw-ssec.github.io/respondent-driven-sampling/reference/environment-variables/) reference for details.
+
+   **Important:** The file must be `server/.env` (next to `server/package.json`), not inside `server/src/` or the repository root.
+
+3. **Install packages**
 
 ```bash
 cd client && npm install
 cd ../server && npm install
 ```
 
-1. **Start the backend server** (with hot reload)
+4. **Start the backend server** (with hot reload)
 
 ```bash
 cd server
@@ -39,14 +61,14 @@ npm run dev
 
    For production-style run: `npm run build` then `npm start`.
 
-1. **Start the frontend dev server** (in a separate terminal)
+5. **Start the frontend dev server** (in a separate terminal)
 
 ```bash
 cd client
 npm run dev
 ```
 
-1. **Visit the app** at [http://localhost:3000](http://localhost:3000).
+6. **Visit the app** at [http://localhost:3000](http://localhost:3000).
 
 The login page will load, but authentication requires the database to be initialised with locations, a super admin account, and seeds. See [Getting Started](https://uw-ssec.github.io/respondent-driven-sampling/getting-started/getting-started/) for the full setup walkthrough.
 

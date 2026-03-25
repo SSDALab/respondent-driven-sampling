@@ -46,6 +46,8 @@ cd ../server && npm install
 cp server/.env.example server/.env
 ```
 
+The file must live at `server/.env` (next to `package.json`), not inside `server/src/`.
+
 Fill in `server/.env`:
 
 ```dotenv
