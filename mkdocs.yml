@@ -50,6 +50,7 @@ nav:
 
   - How-To:
       - Deployment: how-to/deployment.md
+      - Infrastructure: how-to/infrastructure.md
       - Setting Up a Survey: how-to/setting-up-a-survey.md
       - Adding Survey Locations: how-to/adding-survey-locations.md
       - Debugging: how-to/debugging.md

@@ -33,6 +33,10 @@ Common timezone values: `America/Los_Angeles`, `America/Denver`, `America/Chicag
 
 ## Production Setup on Azure
 
-On Azure App Service, environment variables are set as **Application settings** rather than in a `.env` file:
+On Azure App Service, environment variables are set as **Application settings** rather than in a `.env` file.
+
+If the infrastructure was provisioned with Pulumi, these variables are configured automatically as App Service settings via `infra/index.ts`. See [Infrastructure](../how-to/infrastructure.md) for details.
+
+For manual configuration:
 
 Azure Portal → App Service → Configuration → Application settings → add each variable as a key-value pair → Save → restart the service.

@@ -1,3 +1,5 @@
+> **Canonical docs:** [Infrastructure Provisioning](https://ssdlab.github.io/respondent-driven-sampling/how-to/infrastructure/) — this file is a quick-reference for the `infra/` directory; the full documentation lives on the docs site.
+
 # RDS Infrastructure (Pulumi + Azure)
 
 Deploy the full Azure stack for the Respondent-Driven Sampling app using **Pulumi with TypeScript**.

@@ -36,6 +36,7 @@ Key capabilities:
 | Auth | Twilio Verify (OTP), JWT |
 | Permissions | CASL (role + attribute-based) |
 | Hosting | Azure App Service |
+| Infrastructure | Pulumi (TypeScript), Azure |
 | QR Scanning | Html5QrcodeScanner, QRCodeCanvas |
 
 ## Open Source and Reuse

@@ -2,6 +2,9 @@
 
 This page covers deploying the RDS App to Azure App Service, the hosting platform used by King County. Complete the [Getting Started](../getting-started/getting-started.md) guide before proceeding.
 
+!!! tip "Need to provision Azure resources first?"
+    If the Azure Resource Group, MongoDB cluster, App Service Plan, and Web App do not exist yet, see [Infrastructure](infrastructure.md) to provision them with Pulumi before deploying application code.
+
 The app is a monorepo: the React frontend (`client/`) is built to static files, copied into the `server/` folder, and served by the Express backend as a single Node.js service.
 
 ## Deployment via GitHub Actions (recommended)
@@ -60,7 +63,9 @@ cp -r client/dist server/dist
 
 ## Environment Variables in Production
 
-On Azure App Service, environment variables are set as **Application settings** (not in a `.env` file):
+On Azure App Service, environment variables are set as **Application settings** (not in a `.env` file).
+
+If the infrastructure was provisioned with Pulumi (see [Infrastructure](infrastructure.md)), these settings are configured automatically during `pulumi up`. Otherwise, set them manually:
 
 Azure Portal > App Service > **Configuration** > **Application settings** > add each variable as a key-value pair > Save > restart the service.
 
