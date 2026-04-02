@@ -1,0 +1,3 @@
+name: rds-infra
+runtime: nodejs
+description: Azure infrastructure for the Respondent-Driven Sampling app
