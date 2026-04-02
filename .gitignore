@@ -67,3 +67,7 @@ desktop.ini
 # Generated seed PDFs
 scripts/seeds/
 scripts/coupons/
+
+# Pulumi
+infra/node_modules/
+infra/Pulumi.*.yaml

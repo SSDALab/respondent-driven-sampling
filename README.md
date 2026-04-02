@@ -36,6 +36,7 @@ cd respondent-driven-sampling
    TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    TWILIO_AUTH_TOKEN=your_twilio_auth_token
    TWILIO_VERIFY_SID=VAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_PHONE_NUMBER=+12065551234
    AUTH_SECRET=paste_output_of_openssl_rand_-hex_32
    TIMEZONE=America/Los_Angeles
    ```

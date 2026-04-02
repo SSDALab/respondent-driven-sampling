@@ -61,6 +61,11 @@ TWILIO_AUTH_TOKEN=""
 ## Format: Starts with "VA" followed by a string of alphanumeric characters.
 ## Location: Found in the Twilio Console under Verify services.
 TWILIO_VERIFY_SID=""
+# TWILIO_PHONE_NUMBER
+## Purpose: The "from" phone number for sending SMS messages. Must be a Twilio-purchased number.
+## Format: E.164 format, e.g., "+12065551234"
+## Location: Found in the Twilio Console under Phone Numbers > Manage > Active Numbers
+TWILIO_PHONE_NUMBER=""
 AUTH_SECRET=""
 # Timezone for date handling (e.g. "America/Los_Angeles", "America/New_York", "UTC")
 # See full list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
