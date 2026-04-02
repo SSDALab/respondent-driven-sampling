@@ -87,7 +87,7 @@ const appServicePlan = new web.AppServicePlan("rds-service-plan", {
   },
 }, {
   // Azure auto-populates these fields; ignoring prevents spurious diffs
-  ignoreChanges: ["elasticScaleEnabled", "isSpot", "maximumElasticWorkerCount", "sku", "targetWorkerCount", "targetWorkerSizeId"],
+  ignoreChanges: ["elasticScaleEnabled", "isSpot", "maximumElasticWorkerCount", "targetWorkerCount", "targetWorkerSizeId"],
 });
 
 // ---------------------------------------------------------------------------
@@ -131,12 +131,10 @@ const webApp = new web.WebApp("rds-web-app", {
     "publicNetworkAccess",
     "redundancyMode",
     "reserved",
-    "serverFarmId",
     "storageAccountRequired",
     "vnetContentShareEnabled",
     "vnetImagePullEnabled",
     "vnetRouteAllEnabled",
-    "siteConfig",
     "tags",
   ],
 });

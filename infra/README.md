@@ -4,7 +4,7 @@ Deploy the full Azure stack for the Respondent-Driven Sampling app using **Pulum
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+)
+- [Node.js](https://nodejs.org/) (v20+)
 - [Pulumi CLI](https://www.pulumi.com/docs/install/)
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 - An Azure subscription
