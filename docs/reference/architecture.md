@@ -32,6 +32,7 @@ respondent-driven-sampling/
 ├── client/          # React SPA (Vite + TypeScript + MUI)
 ├── server/          # Express API (TypeScript + MongoDB)
 ├── docs/            # Documentation source (this site)
+├── infra/           # Azure infrastructure (Pulumi + TypeScript)
 ├── mkdocs.yml       # MkDocs configuration
 └── .github/         # CI/CD workflows, issue templates
 ```
@@ -132,6 +133,8 @@ Example: volunteers can only update surveys they created today at their current 
 Permissions are defined in `server/src/permissions/abilityBuilder.ts` and the same constants are imported by the frontend (`client/src/hooks/useAbility.tsx`) to mirror permission checks in the UI.
 
 ## Deployment Architecture
+
+Azure resources (Resource Group, MongoDB vCore cluster, App Service Plan, and Web App) are provisioned via Pulumi in the `infra/` directory. See [Infrastructure](../how-to/infrastructure.md) for setup instructions.
 
 In production (Azure App Service):
 

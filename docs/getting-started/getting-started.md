@@ -7,7 +7,7 @@
 - **GitHub** — to fork the repository and use GitHub Actions for CI/CD. [Fork the repository](https://github.com/SSDALab/respondent-driven-sampling/fork).
 - **MongoDB** — all survey data is stored in MongoDB. [MongoDB Atlas](https://www.mongodb.com/atlas) (free M0 tier) is recommended. The connection string (`MONGO_URI`) and database name (`MONGO_DB_NAME`) come from the chosen provider.
 - **Twilio** — OTP authentication for volunteer logins via Twilio Verify. Requires `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and a Verify service SID (`TWILIO_VERIFY_SID`). `TWILIO_PHONE_NUMBER` is only needed for outbound bulk SMS.
-- **Azure App Service** (or any Node.js host) — King County uses Azure; see [Deployment](../how-to/deployment.md) for specifics.
+- **Azure App Service** (or any Node.js host) — King County uses Azure; see [Infrastructure](../how-to/infrastructure.md) for provisioning with Pulumi and [Deployment](../how-to/deployment.md) for deploying application code.
 
 **Local tools:**
 
@@ -122,4 +122,4 @@ For a pre-deployment end-to-end test, see the checklist in [Setting Up a Survey]
 
 ## 8. Deploy
 
-See [Deployment](../how-to/deployment.md) for Azure App Service instructions.
+To deploy to Azure App Service, first provision the required Azure resources (see [Infrastructure](../how-to/infrastructure.md)), then deploy the application code (see [Deployment](../how-to/deployment.md)).
