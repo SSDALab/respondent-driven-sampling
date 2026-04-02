@@ -1,220 +1,103 @@
+<!-- Zenodo DOI badge — replace TODO_ZENODO_DOI with actual DOI after Zenodo registration -->
+[![DOI](https://zenodo.org/badge/DOI/TODO_ZENODO_DOI.svg)](https://doi.org/TODO_ZENODO_DOI)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 ## Overview
 
-The RDS App is a secure, accessible, and open-source web application that streamlines data collection for homelessness research using **Respondent-Driven Sampling (RDS)**. Developed in collaboration with the University of Washington iSchool and the King County Regional Homelessness Authority (KCRHA), this app enables volunteers and administrators to collect accurate survey data, track referrals, and generate population estimates more effectively than traditional Point-In-Time (PIT) counts.
+> **Documentation:** [ssdlab.github.io/respondent-driven-sampling](https://ssdlab.github.io/respondent-driven-sampling/)
 
-<!-- > **Live Deployment:** [Link to App](https://rds-main-g6e3dpefdabmcmca.westus-01.azurewebsites.net/login) -->
+The RDS App is an open-source web application for conducting **Respondent-Driven Sampling (RDS)** surveys of unsheltered populations. Developed in collaboration with the University of Washington  County Regional Homelessness Authority (KCRHA), the app enables volunteers and administrators to collect survey data, track referral chains, and develop population estimates for Point-in-Time (PIT) counts.
 
-> **Research-Driven:** Based on field-tested RDS methodologies
+The codebase is a TypeScript monorepo: React frontend (`client/`), Node.js/Express backend (`server/`), and MongoDB for data storage. Authentication is handled via Twilio Verify (OTP). The present deployment is through Azure App Service.
 
-> **Secure & Compliant:** Built with HIPAA and HUD compliance in mind
+## Local Development
 
-## Tech Stack
-
-| Layer       | Technology                       |
-| ----------- | -------------------------------- |
-| Frontend    | React, HTML/CSS, JavaScript      |
-| Backend     | Node.js, Express.js              |
-| Database    | MongoDB                          |
-| Auth        | Twilio                           |
-| Hosting     | Azure Web Service                |
-| QR Scanning | Html5QrcodeScanner, QRCodeCanvas |
-
-## Directory (old)
-
-```plaintext
-client/                   # Client-facing React application
-├── build/                # Production build of the React app
-├── static/               # Static assets (JS, CSS, media)
-│   ├── js/               # Compiled JS chunks
-│   │   ├── 488.db91e947.chunk.js         # Bundled JS code for part of the React app
-│   │   └── 488.db91e947.chunk.js.map     # Source map for debugging that chunk
-│   ├── asset-manifest.json               # Maps file names to generated names (used by backend)
-│   ├── favicon.ico                       # Icon shown in browser tab
-│   ├── index.html                        # Root HTML file for the React app
-│   ├── manifest.json                     # Metadata for PWA features (name, icons, theme color)
-│   └── robots.txt                        # Tells search engines what to crawl or not
-├── public/               # Files accessible to anyone on the internet
-│   ├── favicon.ico                       # Icon file for the application
-│   ├── index.html                        # The main HTML file that serves as the entry point
-│   ├── manifest.json                     # Metadata about the web application
-│   └── robots.txt                        # Instructs crawlers on access rules
-├── src/                  # Source code for the app
-│   ├── components/
-│   │   └── survey/
-│   │       └── SurveyComponent.tsx        # Survey component logic
-│   ├── pages/
-│   │   ├── AdminDashboard/               # Admin dashboard code. Shows staff
-│   │   │   ├── NewUser.tsx               # Admin new user creation
-│   │   │   └── StaffDashboard.tsx        # Admin dashboard UI
-│   │   ├── CompletedSurvey/
-│   │   │   ├── CompletedSurvey.tsx       # End of survey functionality code
-│   │   │   └── QrPage.tsx                # Displays generated QR code
-│   │   ├── Header/
-│   │   │   └── Header.tsx                # Header functionality code
-│   │   ├── LandingPage/
-│   │   │   └── LandingPage.tsx           # App landing page functionality code
-│   │   ├── Login/
-│   │   │   └── Login.tsx                 # Login functionality code
-│   │   ├── PastEntries/
-│   │   │   ├── PastEntries.tsx           # Past survey entries dashboard functionality
-│   │   │   ├── SurveyDetails.tsx         # Displays individual survey details
-│   │   ├── Profile/
-│   │   │   ├── AdminEditProfile.tsx      # Edit profile functionalities
-│   │   │   └── ViewProfile.tsx
-│   │   ├── QRCodeScanAndReferral/
-│   │   │   └── ApplyReferral.tsx         # Functionality to apply a referral code
-│   │   ├── Signup/
-│   │   │   └── Signup.tsx                # Sign up functionality
-│   │   └── SurveyEntryDashboard/
-│   │       └── SurveyEntryDashboard.tsx  # Displays all surveys as a dashboard
-│   ├── App.tsx                           # Main component of the application
-│   ├── App.test.js                       # Contains tests for the App component
-│   ├── index.tsx                         # JS entry point; renders root React component
-│   ├── index.css                         # Global styles for the application
-│   ├── logo.svg                          # The React logo
-│   ├── setupTests.js                     # Sets up the testing environment
-│   ├── assets/                           # Image assets for UI
-│   │   ├── filter.png
-│   │   ├── magnifyingGlass.png
-│   │   ├── pencil.png
-│   │   ├── trash.png
-│   │   └── up-down.png
-│   ├── styles/                           # Styling files by page/component
-│   │   ├── ApplyReferral.css
-│   │   ├── LandingPage.css
-│   │   ├── PastEntriesCss.css
-│   │   ├── StaffDashboard.css
-│   │   ├── SurveyDashboard.css
-│   │   ├── SurveyDetailsCss.css
-│   │   ├── complete.css
-│   │   ├── header.css
-│   │   ├── login.css
-│   │   ├── profile.css
-│   │   └── signup.css
-│   ├── types/                            # TypeScript type definitions
-│   │   ├── AuthProps.ts
-│   │   ├── ReferralCode.ts
-│   │   ├── Survey.ts
-│   │   └── User.ts
-│   └── vite-env.d.ts                     # Vite's auto-imported type definitions
-├── .gitignore                            # Specifies files to ignore in Git
-├── README.md                             # Description of the project, usage, etc.
-├── README.old.md                         # Old version of the project description
-├── package.json                          # Frontend dependencies and scripts
-├── package-lock.json                     # Lockfile for frontend dependencies
-├── prettier.config.js                    # Code formatting configuration
-├── tsconfig.json                         # TypeScript config file
-└── vite.config.ts                        # Vite bundler configuration
-server/                   # Backend code
-├── __tests__/                     # Backend tests
-│   ├── database.test.js
-│   └── server.test.js
-├── database/              # Database layer
-│   ├── __tests__/                 # Database tests
-│   │   └── index.test.ts
-│   ├── survey/                    # Survey domain module
-│   │   ├── mongoose/              # Mongoose models and hooks
-│   │   │   ├── __tests__/
-│   │   │   ├── survey.hooks.ts
-│   │   │   └── survey.model.ts
-│   │   ├── zod/                   # Zod validation schemas
-│   │   │   ├── __tests__/
-│   │   │   ├── survey.base.ts
-│   │   │   └── survey.validator.ts
-│   │   ├── survey.controller.ts   # Route operations
-│   │   └── survey.utils.ts        # Utility functions
-│   ├── user/                      # User domain module (same structure as survey)
-│   │   └── ...
-│   ├── seed/                      # Seed domain module (same structure as survey)
-│   │   └── ...
-│   ├── utils/                     # Database utilities
-│   │   ├── constants.ts
-│   │   └── errors.ts
-│   └── index.ts                   # Database module exports
-├── models/               # Mongoose schemas
-│   └── __tests__/                 # Models tests
-│       ├── Survey.test.js
-│       └── Users.test.js
-│   ├── Survey.js                         # Survey entries with responses and geolocation
-│   └── Users.js                          # User accounts, roles, and hashed passwords
-├── routes/               # API routes
-│   ├── __tests__/                 # Routes tests
-│   │   ├── auth.test.js
-│   │   ├── pages.test.js
-│   │   └── surveys.test.js
-│   ├── auth.js                           # Handles login, registration, and approvals
-│   ├── pages.js                          # Future page-level routing logic
-│   └── surveys.js                        # Routes to submit, validate, and fetch surveys
-├── utils/
-│   ├── __tests__/                 # Utils tests
-│   │   └── generateReferralCode.test.js
-│   └── generateReferralCode.js           # Utility to generate unique referral codes
-├── index.ts                              # Main entry point for Express backend
-├── .gitignore                            # Specifies files to ignore in Git
-├── package.json                          # Backend dependencies and scripts
-└── package-lock.json                     # Lockfile for backend dependencies
-```
-
-## Setup Instructions
-
-### 🔧 Local Development
-
-1. **Clone Repo**
+1. **Clone the repo**
 
 ```bash
-git clone <repository>
-cd <repository>
+git clone https://github.com/SSDALab/respondent-driven-sampling.git
+cd respondent-driven-sampling
 ```
 
-2. **Set Environment Variables**
-   Copy paste `.env.example` as `.env` in the `server` directory, and paste the neccessary environment values.
+2. **Set environment variables**
 
-3. **Install Packages**
+   Copy the template to create your local env file:
+
+   ```bash
+   cp server/.env.example server/.env
+   ```
+
+   Open `server/.env` and fill in your values:
+
+   ```dotenv
+   NODE_ENV=development
+   MONGO_URI=mongodb+srv://YOUR_USER:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/
+   MONGO_DB_NAME=rds-your-db-name
+   TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_AUTH_TOKEN=your_twilio_auth_token
+   TWILIO_VERIFY_SID=VAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   TWILIO_PHONE_NUMBER=+12065551234
+   AUTH_SECRET=paste_output_of_openssl_rand_-hex_32
+   TIMEZONE=America/Los_Angeles
+   ```
+
+   > **Where do I get these values?**
+   > These credentials are **not** included in the repository. Contact a project maintainer to obtain shared development values, or set up your own [MongoDB Atlas](https://www.mongodb.com/atlas) and [Twilio](https://console.twilio.com) accounts. Generate `AUTH_SECRET` locally with `openssl rand -hex 32`. See the full [Environment Variables](https://ssdlab.github.io/respondent-driven-sampling/reference/environment-variables/) reference for details on each variable.
+
+   **Important:** The file must be `server/.env` (next to `server/package.json`), not inside `server/src/` or the repository root.
+
+3. **Install packages**
 
 ```bash
-npm install
+cd client && npm install
+cd ../server && npm install
 ```
 
-4. **Start Backend Server**
+4. **Start the backend server** (with hot reload)
 
 ```bash
-npm start
+cd server
+npm run dev
 ```
 
-5. **Start Frontend Dev Server** (In seperate terminal)
+   For production-style run: `npm run build` then `npm start`.
+
+5. **Start the frontend dev server** (in a separate terminal)
 
 ```bash
 cd client
 npm run dev
 ```
 
-6. **Visit App** at http://localhost:3000.
+6. **Visit the app** at [http://localhost:3000](http://localhost:3000).
+
+The login page will load, but authentication requires the database to be initialised with locations, a super admin account, and seeds. See [Getting Started](https://ssdlab.github.io/respondent-driven-sampling/getting-started/getting-started/) for the full setup walkthrough.
 
 ## Future Directions
 
-The items listed below are features our team has identified out of scope for the duration of our project. These items are still considered high importance for the project as a whole, and are highly recommended as a jumping off point for teams taking over the project in the future.
+The following features have been identified as high-priority candidates for future development:
 
 **App Features**
 
--   Auto-populate location using GPS location coordinates
--   Widget for staff to comment on survey responses
--   Integration with Homeless Management Information System (HMIS) database system
--   Volunteer scheduling dashboard for administrators
--   Automated SMS gift card distribution
--   Resume unfinished survey feature
--   Admin ability to edit survey questions
--   Volunteer ability to edit survey responses
--   Survey analytics dashboard
+- Auto-populate location from last survey entry
+- Widget for staff to comment on survey responses
+- Integration with Homeless Management Information System (HMIS)
+- Volunteer scheduling dashboard for administrators
+- Resume unfinished survey feature
+- Admin ability to edit survey questions
+- Volunteer ability to edit survey responses
+- Survey analytics dashboard
 
 **Testing**
 
--   Dynamic Application Security Testing (DAST)
+- Dynamic Application Security Testing (DAST)
 
-**User Experience**
--Step-by-step user training guide
+## Funding Support
 
--   Setup wizard
+This project is supported by:
+
+- NSF CAREER Grant [#SES-2142964](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2142964) to Zack Almquist (PI)
+- UW Population Health Grant Tier 3
 
 ## Contributors
-
-Thanks to the following people for their work on this project: Ihsan Kahveci, June Yang, Emily Porter, Zack Almquist, Elizabeth Deng, KelliAnn Ramirez, Jasmine Vuong, Hannah Lam, Ella Weinberg, Arushi Agarwal, Devanshi Desai, Aryan Palave, Kaden Kapadia, Hrudhai Umashankar, Liya Finley Hutchison, Hana Amos, Zack Crouse, Kristen L Gustafson.
+[![Contributors](https://contrib.rocks/image?repo=SSDALab/respondent-driven-sampling)](https://github.com/SSDALab/respondent-driven-sampling/graphs/contributors)
