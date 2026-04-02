@@ -80,6 +80,20 @@ This outputs blank PDF templates to `server/src/scripts/coupons/`. These templat
 
 Full options for all scripts are in [CLI Scripts](../reference/cli-scripts.md).
 
+---
+
+## 5. Update Survey Module
+
+Customise the survey questionnaire for your campaign by editing `client/src/pages/Survey/utils/survey.json`. After any changes, rebuild and redeploy the client:
+
+```bash
+cd client && npm run build
+```
+
+See [Getting Started — Customise](../getting-started/getting-started.md#7-customise) for full customisation options including theme, app title, and environment variables.
+
+---
+
 ## Pre-Campaign Checklist
 
 - [ ] All survey sites imported and verified (`npm run location -- list`)

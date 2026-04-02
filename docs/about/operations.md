@@ -14,7 +14,7 @@ If you need access to:
 
 ## GitHub Organization Permissions
 
-The repository currently lives under the [uw-ssec](https://github.com/uw-ssec) GitHub organization. Repository permissions are managed by SSEC org admins.
+The repository lives under the [SSDALab](https://github.com/SSDALab) GitHub organization. Repository permissions are managed by org admins.
 
 To request:
 
@@ -33,7 +33,7 @@ The production app does not currently have a dedicated monitoring service. To ch
 
 If you are running your own deployment, you are responsible for your own infrastructure. UW can provide guidance but does not manage other cities' Azure or MongoDB accounts.
 
-For questions, open an issue at [github.com/uw-ssec/respondent-driven-sampling/issues](https://github.com/uw-ssec/respondent-driven-sampling/issues).
+For questions, open an issue at [github.com/SSDALab/respondent-driven-sampling/issues](https://github.com/SSDALab/respondent-driven-sampling/issues).
 
 ## Zenodo Setup
 
@@ -43,7 +43,7 @@ Zenodo registration cannot be automated — it requires a repository maintainer 
 
 1. Go to [zenodo.org](https://zenodo.org) and sign in with GitHub.
 2. Navigate to **Account → Settings → GitHub**.
-3. Find `uw-ssec/respondent-driven-sampling` in the repository list and toggle it **On**.
+3. Find `SSDALab/respondent-driven-sampling` in the repository list and toggle it **On**.
 4. Publish a GitHub Release (tag: `v1.0.0` or appropriate).
 5. Zenodo archives the release and issues a DOI within 1–2 minutes.
 6. Copy the concept DOI (stable across all versions) from the Zenodo record page.

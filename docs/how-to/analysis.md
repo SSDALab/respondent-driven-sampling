@@ -7,12 +7,15 @@ The RDS App collects and stores survey data. **Population estimation and statist
 - Collecting survey responses
 - Maintaining referral chain relationships
 - Storing raw data in MongoDB
+- Providing an admin dashboard for tracking data collection in real time during the survey campaign
 
 Analysis (RDS estimators, network visualization, population projections) is a separate post-collection step.
 
 ## Exporting Data
 
 Survey data can be exported via `mongoexport` (JSON or CSV). See [Database I/O](../reference/database-io.md) for full export commands and examples.
+
+Alternatively, the `mongolite` (R) and `PyMongo` (Python) packages can connect directly to MongoDB via the API and query data without exporting to a file first.
 
 ## Survey Data Structure
 
@@ -33,4 +36,4 @@ The referral chain is reconstructed from `parentSurveyCode` and `childSurveyCode
 
 ## Future Plans
 
-A dedicated analysis module (in-repo scripts or Jupyter notebook) for King County data is planned for a future release. Contributions are welcome — see [CONTRIBUTING.md](https://github.com/uw-ssec/respondent-driven-sampling/blob/main/CONTRIBUTING.md).
+A dedicated analysis module (in-repo scripts or Jupyter notebook) for King County data is planned for a future release. Contributions are welcome — see [CONTRIBUTING.md](https://github.com/SSDALab/respondent-driven-sampling/blob/main/CONTRIBUTING.md).

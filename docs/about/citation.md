@@ -10,12 +10,12 @@ Lam, H., Weinberg, E., Agarwal, A., Desai, D., Palave, A., Kapadia, K.,
 Umashankar, H., Finley Hutchison, L., Amos, H., Crouse, Z., Gustafson, K. L.,
 Mittal, A., Robbins, N., & Tambay, A. (2024). Respondent-Driven Sampling (RDS) Application [Software].
 University of Washington Scientific Software Engineering Center (SSEC).
-https://github.com/uw-ssec/respondent-driven-sampling
+https://github.com/SSDALab/respondent-driven-sampling
 ```
 
 ## CITATION.cff
 
-A machine-readable [`CITATION.cff`](https://github.com/uw-ssec/respondent-driven-sampling/blob/main/CITATION.cff) file is included in the repository root. GitHub surfaces this automatically via the "Cite this repository" button on the repo homepage.
+A machine-readable [`CITATION.cff`](https://github.com/SSDALab/respondent-driven-sampling/blob/main/CITATION.cff) file is included in the repository root. GitHub surfaces this automatically via the "Cite this repository" button on the repo homepage.
 
 ## BibTeX
 
@@ -31,7 +31,7 @@ A machine-readable [`CITATION.cff`](https://github.com/uw-ssec/respondent-driven
                Gustafson, {Kristen L} and Mittal, Anant and
                Robbins, Natalie and Tambay, Anshul},
   year      = {2024},
-  url       = {https://github.com/uw-ssec/respondent-driven-sampling},
+  url       = {https://github.com/SSDALab/respondent-driven-sampling},
   license   = {BSD-3-Clause},
   abstract  = {An open-source web application for conducting Respondent-Driven
                Sampling (RDS) surveys of unsheltered populations.}

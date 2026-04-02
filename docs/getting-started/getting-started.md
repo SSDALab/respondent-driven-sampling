@@ -4,7 +4,7 @@
 
 **Accounts required:**
 
-- **GitHub** — to fork the repository and use GitHub Actions for CI/CD. [Fork the repository](https://github.com/uw-ssec/respondent-driven-sampling/fork).
+- **GitHub** — to fork the repository and use GitHub Actions for CI/CD. [Fork the repository](https://github.com/SSDALab/respondent-driven-sampling/fork).
 - **MongoDB** — all survey data is stored in MongoDB. [MongoDB Atlas](https://www.mongodb.com/atlas) (free M0 tier) is recommended. The connection string (`MONGO_URI`) and database name (`MONGO_DB_NAME`) come from the chosen provider.
 - **Twilio** — OTP authentication for volunteer logins via Twilio Verify. Requires `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and a Verify service SID (`TWILIO_VERIFY_SID`). `TWILIO_PHONE_NUMBER` is only needed for outbound bulk SMS.
 - **Azure App Service** (or any Node.js host) — King County uses Azure; see [Deployment](../how-to/deployment.md) for specifics.
@@ -52,13 +52,19 @@ Fill in `server/.env`:
 
 ```dotenv
 NODE_ENV=development
-MONGO_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/
-MONGO_DB_NAME=rds-king-county
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxx
-TWILIO_VERIFY_SID=VAxxxxxxxxxxxxxxxxxx
-AUTH_SECRET=<output of: openssl rand -hex 32>
-TIMEZONE=America/Los_Angeles
+MONGO_URI=
+MONGO_DB_NAME=
+TWILIO_ACCOUNT_SID=""
+TWILIO_AUTH_TOKEN=""
+# TWILIO_VERIFY_SID
+## Purpose: Uniquely identifies a Twilio Verify service; required for API operations like sending or checking verification codes.
+## Format: Starts with "VA" followed by a string of alphanumeric characters.
+## Location: Found in the Twilio Console under Verify services.
+TWILIO_VERIFY_SID=""
+AUTH_SECRET=""
+# Timezone for date handling (e.g. "America/Los_Angeles", "America/New_York", "UTC")
+# See full list: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+TIMEZONE="America/Los_Angeles"
 ```
 
 The MongoDB connection string is obtained from Atlas via **Connect > Drivers**. Full variable descriptions are in [Environment Variables](../reference/environment-variables.md).

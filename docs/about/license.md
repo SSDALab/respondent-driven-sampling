@@ -35,7 +35,7 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-The full license text is also available at [`LICENSE`](https://github.com/uw-ssec/respondent-driven-sampling/blob/main/LICENSE) in the repository root.
+The full license text is also available at [`LICENSE`](https://github.com/SSDALab/respondent-driven-sampling/blob/main/LICENSE) in the repository root.
 
 ## Implications for Adopters
 

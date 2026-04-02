@@ -4,6 +4,8 @@ Technical terms specific to the RDS App codebase and documentation.
 
 ---
 
+**RDS** — Respondent-Driven Sampling. A network-based sampling method for reaching hidden populations without a sampling frame. See [RDS Methodology](../about/rds-methodology.md).
+
 **CASL** — A JavaScript authorization library used for role and attribute-based access control. Defines what each user role can read, create, update, or delete. See [Architecture](architecture.md#permissions-casl).
 
 **Coupon** — A physical card with a space for a QR code sticker. Generated as blank PDF templates via `npm run generate-coupons`. Not connected to the database.
@@ -14,7 +16,7 @@ Technical terms specific to the RDS App codebase and documentation.
 
 **OTP** — One-Time Password. A short-lived numeric code sent via SMS through Twilio Verify that volunteers enter to authenticate.
 
-**Seed** — The initial survey code (and its corresponding QR code) distributed to start a referral chain. Seeds have no `parentSurveyCode`. See [CLI Scripts](cli-scripts.md#npm-run-generate-seeds).
+**Seed** — The initial survey code (and its corresponding QR code) distributed to start a referral chain. Seeds have no `parentSurveyCode`. See [CLI Scripts — generate-seeds](cli-generate-seeds.md).
 
 **SID** — Service Identifier. A Twilio-specific string identifying an account (`TWILIO_ACCOUNT_SID`, starts with `AC`) or a Verify service (`TWILIO_VERIFY_SID`, starts with `VA`).
 

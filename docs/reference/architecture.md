@@ -131,38 +131,6 @@ Example: volunteers can only update surveys they created today at their current 
 
 Permissions are defined in `server/src/permissions/abilityBuilder.ts` and the same constants are imported by the frontend (`client/src/hooks/useAbility.tsx`) to mirror permission checks in the UI.
 
-## Survey Referral Chain
-
-```
-Seed (surveyCode: "A1B2C3D4", parentSurveyCode: null)
-     │
-     │ participant scans seed QR
-     ▼
-Survey A (surveyCode: "A1B2C3D4")
-     │ generates 3 child codes on completion
-     ├─► Child code "E5F6G7H8"
-     ├─► Child code "I9J0K1L2"
-     └─► Child code "M3N4O5P6"
-           │
-           │ peer scans child QR
-           ▼
-     Survey B (surveyCode: "E5F6G7H8", parentSurveyCode: "A1B2C3D4")
-           │ generates 3 more child codes
-           └─► ...
-```
-
-**Key fields in the `surveys` collection:**
-
-
-| Field              | Description                                           |
-| ------------------ | ----------------------------------------------------- |
-| `surveyCode`       | The code that was scanned to start this survey        |
-| `parentSurveyCode` | The code that referred this participant               |
-| `childSurveyCodes` | Array of 3 unique codes for this participant to share |
-
-
-Child survey codes are 8-character hex strings, globally unique, generated with retry logic (`server/src/database/survey/survey.controller.ts: generateUniqueChildSurveyCodes`).
-
 ## Deployment Architecture
 
 In production (Azure App Service):

@@ -4,7 +4,7 @@
 
 ## Overview
 
-> **Documentation:** [uw-ssec.github.io/respondent-driven-sampling](https://uw-ssec.github.io/respondent-driven-sampling/)
+> **Documentation:** [ssdlab.github.io/respondent-driven-sampling](https://ssdlab.github.io/respondent-driven-sampling/)
 
 The RDS App is an open-source web application for conducting **Respondent-Driven Sampling (RDS)** surveys of unsheltered populations. Developed in collaboration with the University of Washington  County Regional Homelessness Authority (KCRHA), the app enables volunteers and administrators to collect survey data, track referral chains, and develop population estimates for Point-in-Time (PIT) counts.
 
@@ -15,7 +15,7 @@ The codebase is a TypeScript monorepo: React frontend (`client/`), Node.js/Expre
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/uw-ssec/respondent-driven-sampling.git
+git clone https://github.com/SSDALab/respondent-driven-sampling.git
 cd respondent-driven-sampling
 ```
 
@@ -41,7 +41,7 @@ cd respondent-driven-sampling
    ```
 
    > **Where do I get these values?**
-   > `MONGO_URI` and `MONGO_DB_NAME` come from [MongoDB Atlas](https://www.mongodb.com/atlas) (Connect → Drivers). `TWILIO_*` values come from the [Twilio Console](https://console.twilio.com). Generate `AUTH_SECRET` with `openssl rand -hex 32`. These credentials are **not** included in the repository — obtain them from your own accounts or your organisation's secrets store. See the full [Environment Variables](https://uw-ssec.github.io/respondent-driven-sampling/reference/environment-variables/) reference for details.
+   > These credentials are **not** included in the repository. Contact a project maintainer to obtain shared development values, or set up your own [MongoDB Atlas](https://www.mongodb.com/atlas) and [Twilio](https://console.twilio.com) accounts. Generate `AUTH_SECRET` locally with `openssl rand -hex 32`. See the full [Environment Variables](https://ssdlab.github.io/respondent-driven-sampling/reference/environment-variables/) reference for details on each variable.
 
    **Important:** The file must be `server/.env` (next to `server/package.json`), not inside `server/src/` or the repository root.
 
@@ -70,7 +70,7 @@ npm run dev
 
 6. **Visit the app** at [http://localhost:3000](http://localhost:3000).
 
-The login page will load, but authentication requires the database to be initialised with locations, a super admin account, and seeds. See [Getting Started](https://uw-ssec.github.io/respondent-driven-sampling/getting-started/getting-started/) for the full setup walkthrough.
+The login page will load, but authentication requires the database to be initialised with locations, a super admin account, and seeds. See [Getting Started](https://ssdlab.github.io/respondent-driven-sampling/getting-started/getting-started/) for the full setup walkthrough.
 
 ## Future Directions
 
@@ -78,7 +78,7 @@ The following features have been identified as high-priority candidates for futu
 
 **App Features**
 
-- Auto-populate location using GPS coordinates
+- Auto-populate location from last survey entry
 - Widget for staff to comment on survey responses
 - Integration with Homeless Management Information System (HMIS)
 - Volunteer scheduling dashboard for administrators
@@ -99,4 +99,4 @@ This project is supported by:
 - UW Population Health Grant Tier 3
 
 ## Contributors
-[![Contributors](https://contrib.rocks/image?repo=uw-ssec/respondent-driven-sampling)](https://github.com/uw-ssec/respondent-driven-sampling/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=SSDALab/respondent-driven-sampling)](https://github.com/SSDALab/respondent-driven-sampling/graphs/contributors)

@@ -10,12 +10,12 @@ The codebase is a TypeScript monorepo (React frontend, Node.js/Express backend, 
 
 ## Project Status
 
-The RDS App was used in the **2026 King County Unsheltered Point-in-Time Count** to collect surveys from approximately 3,700 unsheltered individuals. The codebase is actively maintained and open to community contributions.
+The RDS App was used in the **2026 King County Unsheltered Point-in-Time Count** to collect surveys from approximately 2,183 unsheltered individuals. The codebase is actively maintained and open to community contributions.
 
 ## Relevant Links
 
 - **License:** BSD 3-Clause — see [License](about/license.md)
-- **Contributing:** [CONTRIBUTING.md](https://github.com/uw-ssec/respondent-driven-sampling/blob/main/CONTRIBUTING.md)
-- **Repository:** [github.com/uw-ssec/respondent-driven-sampling](https://github.com/uw-ssec/respondent-driven-sampling)
-- **Issues:** [GitHub Issues](https://github.com/uw-ssec/respondent-driven-sampling/issues)
+- **Contributing:** [CONTRIBUTING.md](https://github.com/SSDALab/respondent-driven-sampling/blob/main/CONTRIBUTING.md)
+- **Repository:** [github.com/SSDALab/respondent-driven-sampling](https://github.com/SSDALab/respondent-driven-sampling)
+- **Issues:** [GitHub Issues](https://github.com/SSDALab/respondent-driven-sampling/issues)
 
