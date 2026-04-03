@@ -5,7 +5,7 @@
 
 ## Overview
 
-> **Documentation:** [ssdalab.github.io/respondent-driven-sampling](https://ssdlab.github.io/respondent-driven-sampling/)
+> **Documentation:** [MKDocs GitHub Site](https://ssdalab.github.io/respondent-driven-sampling/)
 
 The RDS App is an open-source web application for conducting **Respondent-Driven Sampling (RDS)** surveys of unsheltered populations. Developed in collaboration with the University of Washington  County Regional Homelessness Authority (KCRHA), the app enables volunteers and administrators to collect survey data, track referral chains, and develop population estimates for Point-in-Time (PIT) counts.
 
