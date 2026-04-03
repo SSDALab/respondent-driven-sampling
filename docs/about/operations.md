@@ -8,9 +8,9 @@ The King County production and test deployments run on Azure App Service. Access
 
 If you need access to:
 
-- **Azure Portal** — open an issue in the repository or contact the SSEC team directly
+- **Azure Portal** — open an issue in the repository or contact the maintainers directly
 - **Azure App Service logs** — Log stream is available in the Azure Portal under the App Service → **Log stream**
-- **Production database (MongoDB Atlas)** — contact the UW SSEC team directly; access is restricted
+- **Production database (MongoDB Atlas)** — contact the maintainers directly; access is restricted
 
 ## GitHub Organization Permissions
 
