@@ -48,8 +48,7 @@ Zenodo registration cannot be automated — it requires a repository maintainer 
 5. Zenodo archives the release and issues a DOI within 1–2 minutes.
 6. Copy the concept DOI (stable across all versions) from the Zenodo record page.
 7. Update `CITATION.cff` with `doi: 10.5281/zenodo.XXXXXXX`, `version`, and `date-released`.
-8. Update `docs/about/citation.md` with the DOI badge and BibTeX `doi` field.
-9. Update `README.md` with the real DOI.
+8. Update `README.md` with the real DOI.
 10. Commit and push these updates to `main`.
 
 After first-time setup, future GitHub Releases are archived automatically.

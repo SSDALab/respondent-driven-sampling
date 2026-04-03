@@ -99,5 +99,9 @@ This project is supported by:
 - NSF CAREER Grant [#SES-2142964](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2142964) to Zack Almquist (PI)
 - UW Population Health Grant Tier 3
 
+## Citation
+
+If you use this software, please cite it via the **"Cite this repository"** button on GitHub or see [`CITATION.cff`](CITATION.cff).
+
 ## Contributors
 [![Contributors](https://contrib.rocks/image?repo=SSDALab/respondent-driven-sampling)](https://github.com/SSDALab/respondent-driven-sampling/graphs/contributors)
