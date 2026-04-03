@@ -1,0 +1,64 @@
+cff-version: 1.2.0
+title: "Respondent-Driven Sampling (RDS) Application"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+license: BSD-3-Clause
+repository-code: "https://github.com/uw-ssec/respondent-driven-sampling"
+url: "https://uw-ssec.github.io/respondent-driven-sampling/"
+abstract: >
+  An open-source web application for conducting Respondent-Driven Sampling (RDS)
+  surveys of unsheltered populations. Built for the King County Regional Homelessness
+  Authority's Point-in-Time count; designed for reuse by other cities and localities.
+authors:
+  - name: "University of Washington Scientific Software Engineering Center (SSEC)"
+  - given-names: Ihsan
+    family-names: Kahveci
+  - given-names: June
+    family-names: Yang
+  - given-names: Emily
+    family-names: Porter
+  - given-names: Zack
+    family-names: Almquist
+  - given-names: Elizabeth
+    family-names: Deng
+  - given-names: KelliAnn
+    family-names: Ramirez
+  - given-names: Jasmine
+    family-names: Vuong
+  - given-names: Hannah
+    family-names: Lam
+  - given-names: Ella
+    family-names: Weinberg
+  - given-names: Arushi
+    family-names: Agarwal
+  - given-names: Devanshi
+    family-names: Desai
+  - given-names: Aryan
+    family-names: Palave
+  - given-names: Kaden
+    family-names: Kapadia
+  - given-names: Hrudhai
+    family-names: Umashankar
+  - given-names: Liya
+    family-names: Finley Hutchison
+  - given-names: Hana
+    family-names: Amos
+  - given-names: Zack
+    family-names: Crouse
+  - given-names: Kristen L
+    family-names: Gustafson
+  - given-names: Anant
+    family-names: Mittal
+  - given-names: Natalie
+    family-names: Robbins
+  - given-names: Anshul
+    family-names: Tambay
+keywords:
+  - respondent-driven sampling
+  - RDS
+  - homelessness
+  - point-in-time count
+  - survey
+  - open-source
+version: "1.0.0"
+date-released: "2026-02-20"
