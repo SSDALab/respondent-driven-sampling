@@ -1,0 +1,70 @@
+site_name: RDS App Documentation
+site_url: https://ssdlab.github.io/respondent-driven-sampling/
+repo_url: https://github.com/SSDALab/respondent-driven-sampling
+repo_name: SSDALab/respondent-driven-sampling
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - About:
+      - Project Overview: about/project-overview.md
+      - RDS Methodology: about/rds-methodology.md
+      - Operations: about/operations.md
+      - License: about/license.md
+  - Getting Started:
+      - Getting Started: getting-started/getting-started.md
+
+  - How-To:
+      - Deployment: how-to/deployment.md
+      - Infrastructure: how-to/infrastructure.md
+      - Setting Up a Survey: how-to/setting-up-a-survey.md
+      - Adding Survey Locations: how-to/adding-survey-locations.md
+      - Debugging: how-to/debugging.md
+      - Database & Security: how-to/database-and-security.md
+      - Post-Survey Analysis: how-to/analysis.md
+      - CI / Workflows: how-to/ci.md
+  - Reference:
+      - Architecture: reference/architecture.md
+      - Environment Variables: reference/environment-variables.md
+      - CLI Scripts:
+          - Overview: reference/cli-scripts.md
+          - super-admin: reference/cli-super-admin.md
+          - location: reference/cli-location.md
+          - generate-seeds: reference/cli-generate-seeds.md
+          - generate-coupons: reference/cli-generate-coupons.md
+      - API Overview: reference/api.md
+      - Database I/O: reference/database-io.md
+      - Glossary: reference/glossary.md

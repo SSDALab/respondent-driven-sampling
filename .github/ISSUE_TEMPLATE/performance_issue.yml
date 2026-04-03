@@ -1,4 +1,4 @@
-name: "🐢 Performance issue"
+name: " Performance issue"
 description: "Report slowness, excessive memory, etc."
 title: "[Perf]: <short summary>"
 labels: ["performance", "triage"]

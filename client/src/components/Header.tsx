@@ -12,7 +12,7 @@ export function Header() {
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 	const navigate = useNavigate();
 	const menuRef = useRef<HTMLDivElement | null>(null); // Ref to track the menu
-	const { userObjectId } = useAuthContext();
+	const { userObjectId, userRole } = useAuthContext();
 	// Function to toggle the profile menu
 	const toggleProfileMenu = () => {
 		setIsProfileMenuOpen(!isProfileMenuOpen);
@@ -23,6 +23,84 @@ export function Header() {
 	};
 
 	const goToLanding = () => {
+		navigate('/dashboard');
+	};
+
+	const goToPreviousPage = () => {
+		const path = window.location.pathname;
+
+		// Define the navigation hierarchy
+		// /survey/{id}/edit -> /survey/{id}
+		if (path.includes('/edit')) {
+			const editMatch = path.match(/^\/survey\/([^/]+)\/edit$/);
+			if (editMatch) {
+				const surveyId = editMatch[1];
+				navigate(`/survey/${surveyId}`);
+				return;
+			}
+		}
+
+		// /survey/{id}/continue -> /survey-entries
+		if (path.includes('/continue')) {
+			navigate('/survey-entries');
+			return;
+		}
+
+		// /survey/{id} -> /survey-entries
+		const surveyDetailsMatch = path.match(/^\/survey\/([^/]+)$/);
+		if (surveyDetailsMatch) {
+			navigate('/survey-entries');
+			return;
+		}
+
+		// /survey (new survey) -> /apply-referral
+		if (path === '/survey') {
+			navigate('/apply-referral');
+			return;
+		}
+
+		// /survey-entries -> /dashboard
+		if (path === '/survey-entries') {
+			navigate('/dashboard');
+			return;
+		}
+
+		// /apply-referral -> /dashboard
+		if (path === '/apply-referral') {
+			navigate('/dashboard');
+			return;
+		}
+
+		// /profile/{userId} -> /admin-dashboard (staff) or /dashboard (volunteers)
+		const profileMatch = path.match(/^\/profile\/([^/]+)$/);
+		if (profileMatch) {
+			const isStaff =
+				userRole === 'MANAGER' ||
+				userRole === 'ADMIN' ||
+				userRole === 'SUPER_ADMIN';
+			navigate(isStaff ? '/admin-dashboard' : '/dashboard');
+			return;
+		}
+
+		// /admin-dashboard -> /dashboard
+		if (path === '/admin-dashboard') {
+			navigate('/dashboard');
+			return;
+		}
+
+		// /add-new-user -> /admin-dashboard
+		if (path === '/add-new-user') {
+			navigate('/admin-dashboard');
+			return;
+		}
+
+		// /qrcode -> /survey-entries
+		if (path === '/qrcode') {
+			navigate('/survey-entries');
+			return;
+		}
+
+		// Default: go to dashboard if no specific rule matches
 		navigate('/dashboard');
 	};
 
@@ -59,13 +137,32 @@ export function Header() {
 	// Close menu when navigating
 	return (
 		<div className="header">
-			{/* Logo with Home Icon */}
-			<div
-				className="logo"
-				onClick={goToLanding}
-				style={{ cursor: 'pointer' }}
-			>
-				<div className="home-icon">
+			{/* Left Icons Container */}
+			<div className="left-icons">
+				{/* Previous Page Icon */}
+				<div
+					className="back-icon"
+					onClick={goToPreviousPage}
+					style={{ cursor: 'pointer' }}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="#3E236E"
+						width="24px"
+						height="24px"
+					>
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+					</svg>
+				</div>
+
+				{/* Home Icon */}
+				<div
+					className="home-icon"
+					onClick={goToLanding}
+					style={{ cursor: 'pointer' }}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24"
@@ -77,8 +174,10 @@ export function Header() {
 						<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
 					</svg>
 				</div>
-				<h1>RDS Mobile</h1>
 			</div>
+
+			{/* Centered Title */}
+			<h1 className="header-title">Point-in-Time Count 2026</h1>
 
 			{/* Navigation Icons */}
 			<div className="nav-icons">

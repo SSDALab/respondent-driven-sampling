@@ -20,7 +20,7 @@ import { initializeSurvey } from './utils/surveyUtils';
 
 // This component is responsible for rendering the survey and handling its logic
 // It uses the SurveyJS library to create and manage the survey
-// It also handles referral code validation and geolocation
+// It also handles coupon code validation and geolocation
 // It uses React Router for navigation and URL parameter handling
 // It uses Zustand (with persist) & localstorage to manage and persist data across sessions
 // It uses the useEffect hook to manage side effects, such as fetching data and updating state
@@ -29,6 +29,7 @@ const Survey = () => {
 	const { surveyService, seedService } = useApi();
 	const [searchParams] = useSearchParams();
 	const surveyCodeInUrl = searchParams.get('ref');
+	const editMode = searchParams.get('mode'); // 'details', 'giftcard', or 'feedback'
 	const { id: surveyObjectIdInUrl } = useParams();
 	const isEditMode = window.location.pathname.includes('/edit');
 
@@ -43,7 +44,7 @@ const Survey = () => {
 	// Add a ref to store the original full survey data in edit mode
 	const originalSurveyData = useRef<any>(null);
 
-	// Conditionally fetch survey by referral code (only when surveyCodeInUrl exists)
+	// Conditionally fetch survey by coupon code (only when surveyCodeInUrl exists)
 	const { data: surveyByRefCode, isLoading: surveyByRefLoading } =
 		surveyCodeInUrl
 			? surveyService.useSurveyBySurveyCode(surveyCodeInUrl)
@@ -235,7 +236,7 @@ const Survey = () => {
 			)
 		) {
 			toast.error(
-				'You do not have permission to create a survey without a referral code.'
+				'You do not have permission to create a survey without a coupon code.'
 			);
 			navigate('/apply-referral');
 			return;
@@ -246,7 +247,8 @@ const Survey = () => {
 			surveyByRefCode as SurveyDocument | null,
 			surveyByObjectId as SurveyDocument | null,
 			parentSurvey as SurveyDocument | null,
-			isEditMode
+			isEditMode,
+			editMode as string | null
 		);
 		surveyRef.current = survey;
 
@@ -284,6 +286,13 @@ const Survey = () => {
 		const handlePopState = (event: { state: { pageNo: any } }) => {
 			const survey = surveyRef.current;
 			if (!survey) return;
+
+			// In edit mode, navigate to survey entries on back button
+			if (isEditMode) {
+				navigate('/survey-entries');
+				return;
+			}
+
 			const currentPageNo = survey.currentPageNo;
 			const targetPageNo = event.state?.pageNo;
 			if (typeof targetPageNo !== 'number') return;
@@ -292,7 +301,7 @@ const Survey = () => {
 		};
 		window.addEventListener('popstate', handlePopState);
 		return () => window.removeEventListener('popstate', handlePopState);
-	}, []);
+	}, [isEditMode, navigate]);
 
 	// Loading state (need to fetch all data)
 	const isLoading =
@@ -310,67 +319,6 @@ const Survey = () => {
 				{surveyRef.current && (
 					<SurveyComponent model={surveyRef.current} />
 				)}
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'center',
-						gap: '24px',
-						marginTop: '12px'
-					}}
-				>
-					<div
-						onClick={() => {
-							if (
-								surveyRef.current &&
-								surveyRef.current.currentPageNo > 0
-							) {
-								surveyRef.current.prevPage();
-							}
-						}}
-						style={{ cursor: 'pointer' }}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							width="36px"
-							height="36px"
-						>
-							<circle cx="12" cy="12" r="10" fill="#3E236E" />
-							<path
-								d="M14 7l-5 5 5 5"
-								stroke="white"
-								strokeWidth="2"
-								fill="none"
-							/>
-						</svg>
-					</div>
-					<div
-						onClick={() => {
-							if (
-								surveyRef.current &&
-								!surveyRef.current.isLastPage
-							) {
-								surveyRef.current.nextPage();
-							}
-						}}
-						style={{ cursor: 'pointer' }}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							width="36px"
-							height="36px"
-						>
-							<circle cx="12" cy="12" r="10" fill="#3E236E" />
-							<path
-								d="M10 7l5 5-5 5"
-								stroke="white"
-								strokeWidth="2"
-								fill="none"
-							/>
-						</svg>
-					</div>
-				</div>
 			</div>
 		</>
 	);

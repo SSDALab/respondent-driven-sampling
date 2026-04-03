@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 💬 General question / discussion
-    url: https://github.com/uw-ssec/project-template/discussions
+  - name: General question / discussion
+    url: https://github.com/SSDALab/respondent-driven-sampling/discussions
     about: Please ask questions in Discussions instead of opening an issue.
 issue_templates:
   - name: Bug report

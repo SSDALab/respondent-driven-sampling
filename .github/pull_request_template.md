@@ -5,35 +5,35 @@
   PRs that follow this template are easier to review and merge.
 -->
 
-## 📄 Description
+## Description
 
 <!-- What does this PR change? Why is it needed? -->
 
-## ✅ Checklist
+## Checklist
 
 -   [ ] Tests added/updated where needed
 -   [ ] Docs added/updated if applicable
 -   [ ] I have linked the issue this PR closes (if any)
 
-## 🔗 Related Issues
+## Related Issues
 
 Resolves #\<issue-number>
 
-## 💡 Type of change
+## Type of change
 
-| Type             | Checked? |
-| ---------------- | -------- |
-| 🐞 Bug fix       | [ ]      |
-| ✨ New feature   | [ ]      |
-| 📝 Documentation | [ ]      |
-| ♻️ Refactor      | [ ]      |
-| 🛠️ Build/CI      | [ ]      |
-| Other (explain)  | [ ]      |
+| Type            | Checked? |
+| --------------- | -------- |
+| Bug fix         | [ ]      |
+| New feature     | [ ]      |
+| Documentation   | [ ]      |
+| Refactor        | [ ]      |
+| Build/CI        | [ ]      |
+| Other (explain) | [ ]      |
 
-## 🧪 How to test
+## How to test
 
 <!-- Steps reviewers can run to verify functionality -->
 
-## 📝 Notes to reviewers
+## Notes to reviewers
 
 <!-- Anything specific reviewers should know before starting -->
