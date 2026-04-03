@@ -5,6 +5,7 @@ type: software
 license: BSD-3-Clause
 repository-code: "https://github.com/SSDALab/respondent-driven-sampling"
 url: "https://ssdalab.github.io/respondent-driven-sampling/"
+doi: "10.5281/zenodo.19393410"
 abstract: >
   An open-source web application for conducting Respondent-Driven Sampling (RDS)
   surveys of unsheltered populations. Built for the King County Regional Homelessness
