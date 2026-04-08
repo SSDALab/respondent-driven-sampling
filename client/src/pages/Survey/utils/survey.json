@@ -282,7 +282,7 @@
         },
         {
           "type": "text",
-          "name": "non_family_network_size",
+          "name": "network_size_agg",
           "title": "Other than any family living with you, how many people do you closely know who are also unhoused or experiencing homelessness today?",
           "validators": [
             {
@@ -292,6 +292,18 @@
             }
           ],
           "inputType": "number"
+        }
+      ]
+    },
+    {
+      "name": "network_size_bridge",
+      "title": "Network Module",
+      "elements": [
+        {
+          "type": "expression",
+          "name": "network_size_list",
+          "visible": false,
+          "expression": "{network_size_agg}"
         }
       ]
     },
@@ -306,10 +318,10 @@
         },
         {
           "type": "paneldynamic",
-          "name": "non_family_network",
-          "title": "For those {non_family_network_size} people, please fill in as much of the following information as you are able:\n",
+          "name": "network_list",
+          "title": "For those {network_size_agg} people, please fill in as much of the following information as you are able:\n",
           "bindings": {
-            "panelCount": "non_family_network"
+            "panelCount": "network_size_list"
           },
           "templateElements": [
             {
